@@ -30,10 +30,14 @@
 //	Thread::Fork.
 //
 //	"threadName" is an arbitrary string, useful for debugging.
+//
+//  @lihaiyang  默认初始化用户id为0， tid为分配资源，无法分配到tid则反回NULL
 //----------------------------------------------------------------------
 
 Thread::Thread(char* threadName)
 {
+    userID = 0;
+    tid = scheduler->aquireTid(this);
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -41,6 +45,18 @@ Thread::Thread(char* threadName)
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
+}
+
+/*  @lihaiyang 
+    饱含用户id的初始化函数
+*/
+Thread::Thread(char* debugName, int userID){
+    userID = userID;
+    tid = scheduler->aquireTid(this);
+    name = debugName;
+    stackTop = NULL;
+    stack = NULL;
+    status = JUST_CREATED;
 }
 
 //----------------------------------------------------------------------
@@ -56,12 +72,12 @@ Thread::Thread(char* threadName)
 //----------------------------------------------------------------------
 
 Thread::~Thread()
-{
+{   
     DEBUG('t', "Deleting thread \"%s\"\n", name);
-
+    scheduler->releaseTid(this);
     ASSERT(this != currentThread);
     if (stack != NULL)
-	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
+	    DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
 }
 
 //----------------------------------------------------------------------
@@ -183,8 +199,8 @@ Thread::Yield ()
     
     nextThread = scheduler->FindNextToRun();
     if (nextThread != NULL) {
-	scheduler->ReadyToRun(this);
-	scheduler->Run(nextThread);
+	    scheduler->ReadyToRun(this);
+	    scheduler->Run(nextThread);
     }
     (void) interrupt->SetLevel(oldLevel);
 }

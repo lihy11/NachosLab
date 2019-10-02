@@ -53,6 +53,33 @@ ThreadTest1()
     SimpleThread(0);
 }
 
+/*
+    @lihaiyang 线程测试函数，打印用户id和线程id
+*/
+void
+SimpleThread2(int which){
+    for(int i = 0; i < 3; i ++){
+        printf("我的名字是 : %s, 我的用户是 : %d, 我的tid是： %d\n",
+            currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
+        currentThread->Yield();
+    }
+}
+/*
+    @lihaiyang 线程测试，循环创建线程直到线程池溢出
+*/
+void
+ThreadTest2(){
+    DEBUG('t', "Entering Thread Test 2");
+    Thread* t = NULL;
+    while((t = new Thread("Test Thread")) != NULL){
+        if(t->getTid() == -1){
+            break;
+        }
+        t->Fork(SimpleThread2, (void*)1);
+    }
+    SimpleThread2(0);
+}
+
 //----------------------------------------------------------------------
 // ThreadTest
 // 	Invoke a test routine.
@@ -63,11 +90,14 @@ ThreadTest()
 {
     switch (testnum) {
     case 1:
-	ThreadTest1();
-	break;
+        ThreadTest1();
+        break;
+    case 2:
+        ThreadTest2();
+        break;
     default:
-	printf("No test specified.\n");
-	break;
+        printf("No test specified.\n");
+        break;
     }
 }
 

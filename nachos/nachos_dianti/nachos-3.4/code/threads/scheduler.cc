@@ -30,6 +30,10 @@
 Scheduler::Scheduler()
 { 
     readyList = new List; 
+    this->threadPool.clear();
+    for(int i = 0; i < MAX_THREAD_NUMBER; i ++){
+        this->tids.push(i);
+    }
 } 
 
 //----------------------------------------------------------------------
@@ -123,7 +127,7 @@ Scheduler::Run (Thread *nextThread)
     // point, we were still running on the old thread's stack!
     if (threadToBeDestroyed != NULL) {
         delete threadToBeDestroyed;
-	threadToBeDestroyed = NULL;
+	    threadToBeDestroyed = NULL;
     }
     
 #ifdef USER_PROGRAM
@@ -144,4 +148,31 @@ Scheduler::Print()
 {
     printf("Ready list contents:\n");
     readyList->Mapcar((VoidFunctionPtr) ThreadPrint);
+}
+
+
+/**/
+int Scheduler::aquireTid(Thread* t){
+
+    if(tids.size() == 0){
+        return -1;
+    }
+    int tid = tids.front();
+    tids.pop();
+    threadPool.push_back(t);
+    return tid;
+}
+
+/**/
+void
+Scheduler::releaseTid(Thread* t){
+    if(t->getTid() == -1){
+        return ;
+    }
+    tids.push(t->getTid());
+    for(std::vector<Thread*>::iterator t0 = threadPool.begin(); t0 != threadPool.end(); t0 ++){
+        if(*t0 == t){
+            threadPool.erase(t0);
+        }
+    }
 }
