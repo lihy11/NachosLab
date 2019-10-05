@@ -166,13 +166,18 @@ int Scheduler::aquireTid(Thread* t){
 /**/
 void
 Scheduler::releaseTid(Thread* t){
+    DEBUG('t', "DEBUG:  Thread addr : %x\n", t);
     if(t->getTid() == -1){
         return ;
     }
+    DEBUG('t', "DEBUG:  tid : %d\n", t->getTid());
     tids.push(t->getTid());
-    for(std::vector<Thread*>::iterator t0 = threadPool.begin(); t0 != threadPool.end(); t0 ++){
+    for(std::vector<Thread*>::iterator t0 = threadPool.begin(); t0 < threadPool.end(); t0 ++){
+    //    printf("DEBUG  : Thread pools : %x\n", *t0);
         if(*t0 == t){
             threadPool.erase(t0);
+            break;
         }
     }
+   
 }

@@ -34,13 +34,13 @@ Machine::Run()
 
     if(DebugIsEnabled('m'))
         printf("Starting thread \"%s\" at time %d\n",
-	       currentThread->getName(), stats->totalTicks);
+	    	currentThread->getName(), stats->totalTicks);
     interrupt->setStatus(UserMode);
     for (;;) {
         OneInstruction(instr);
-	interrupt->OneTick();
-	if (singleStep && (runUntilTime <= stats->totalTicks))
-	  Debugger();
+		interrupt->OneTick();
+		if (singleStep && (runUntilTime <= stats->totalTicks))
+	  		Debugger();
     }
 }
 
