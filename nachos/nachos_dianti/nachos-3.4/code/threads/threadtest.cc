@@ -1,12 +1,12 @@
-// threadtest.cc 
+// threadtest.cc
 //	Simple test case for the threads assignment.
 //
 //	Create two threads, and have them context switch
-//	back and forth between themselves by calling Thread::Yield, 
+//	back and forth between themselves by calling Thread::Yield,
 //	to illustratethe inner workings of the thread system.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -18,64 +18,66 @@ int testnum = 1;
 
 //----------------------------------------------------------------------
 // SimpleThread
-// 	Loop 5 times, yielding the CPU to another ready thread 
+// 	Loop 5 times, yielding the CPU to another ready thread
 //	each iteration.
 //
 //	"which" is simply a number identifying the thread, for debugging
 //	purposes.
 //----------------------------------------------------------------------
 
-void
-SimpleThread(int which)
+void SimpleThread(int which)
 {
     int num;
-    
-    for (num = 0; num < 5; num++) {
-	printf("*** thread %d looped %d times\n", which, num);
+
+    for (num = 0; num < 5; num++)
+    {
+        printf("*** thread %d looped %d times\n", which, num);
         currentThread->Yield();
     }
 }
 
 //----------------------------------------------------------------------
 // ThreadTest1
-// 	Set up a ping-pong between two threads, by forking a thread 
+// 	Set up a ping-pong between two threads, by forking a thread
 //	to call SimpleThread, and then calling SimpleThread ourselves.
 //----------------------------------------------------------------------
 
-void
-ThreadTest1()
+void ThreadTest1()
 {
     DEBUG('t', "Entering ThreadTest1");
 
     Thread *t = new Thread("forked thread");
 
-    t->Fork(SimpleThread, (void*)1);
+    t->Fork(SimpleThread, (void *)1);
     SimpleThread(0);
 }
 
 /*
     @lihaiyang 线程测试函数，打印用户id和线程id
 */
-void
-SimpleThread2(int which){
-    for(int i = 0; i < 3; i ++){
+void SimpleThread2(int which)
+{
+    for (int i = 0; i < 3; i++)
+    {
         printf("我的名字是 : %s, 我的用户是 : %d, 我的tid是： %d\n",
-            currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
+               currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
         currentThread->Yield();
     }
 }
 /*
     @lihaiyang 线程测试，循环创建线程直到线程池溢出
 */
-void
-ThreadTest2(){
+void ThreadTest2()
+{
     DEBUG('t', "Entering Thread Test 2");
-    Thread* t = NULL;
-    while((t = new Thread("Test Thread")) != NULL){
-        if(t->getTid() == -1){
+    Thread *t = NULL;
+    while ((t = new Thread("Test Thread")) != NULL)
+    {
+        if (t->getTid() == -1)
+        {
             break;
         }
-        t->Fork(SimpleThread2, (void*)1);
+        t->Fork(SimpleThread2, (void *)1);
     }
     SimpleThread2(0);
 }
@@ -85,10 +87,10 @@ ThreadTest2(){
 // 	Invoke a test routine.
 //----------------------------------------------------------------------
 
-void
-ThreadTest()
+void ThreadTest()
 {
-    switch (testnum) {
+    switch (testnum)
+    {
     case 1:
         ThreadTest1();
         break;
@@ -100,4 +102,3 @@ ThreadTest()
         break;
     }
 }
-

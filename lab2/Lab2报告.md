@@ -1,3 +1,4 @@
+
 ## Lab2 线程调度 实验报告
 #### Exercise1 
 - 对于linux中的普通进程来说，调度算法采取完全公平调度算法(CFS)，其根本思想是让每一个进程能够分配的到相同时间的CPU使用权，如果某个进程为IO密集型进程，其CPU使用时间较短，则调度时则会考虑让其有更高的优先级上CPU，以弥补其在CPU使用时间上的劣势。
@@ -5,3 +6,17 @@
 - 对于实时进程，linux采用了两种调度方式，SCHED_FIFO和SCHED_RR，即简单的先进先出和时间片轮转算法。但是每个进程的优先级都高于普通进程。
 - Windows 实现了一个优先驱动的，抢先式的调度系统——具有最高优先级的可运行线程总是运行，而该线程可能仅限于在允许它运行的处理器上运行，这种现象称为处理器亲和性，在默认的情况下，线程可以在任何一个空闲的处理器上运行，但是，你可以使用windows 调度函数，或者在映像头部设置一个亲和性掩码来改变处理器亲和性。也就是在一定程度上将进程和CPU绑定
 - 参考链接：https://blog.csdn.net/deyili/article/details/6420034；https://blog.csdn.net/lenomirei/article/details/79274073；https://www.cnblogs.com/lenomirei/p/5516872.html
+
+#### Exercise2 
+Nachos系统中，没有设置复杂的线程调度算法。其调度算法可以分为两种情况。
+- 在命令行不添加`-rs 2`的情况下，其初始化全局变量时不会初始化时钟中断模拟器。
+```C++  
+// system.cc
+ if (randomYield)             // start the timer (if needed)
+        timer = new Timer(TimerInterruptHandler, 0, randomYield);
+```
+这种情况下，在线程运行的过程中不会产生时钟中断，因此当系统中没有其他中断的情况下，cpu的使用权只能由线程自行放弃，无法被抢占和调度。
+
+- 在命令行添加`-rs 2`的情况下，时钟模拟器会初始化，并且定期向待处理的中断列表中发送时钟中断。Nachos在每条指令执行前都会检查中断列表，当需要处理中断时，则调用`timer.cc:TimerHandler()`函数，该函数会向中断列表插入下一个时钟中断，然后调用注册的中断处理函数`system.cc:TimeInteruptHandler()`，该函数检查当前是否还有进程等待，如果有则调用`Thread.cc:Yield()`函数，该函数将当前进程加入等待队列并选取下一个进程进行调度，选取原则是先来先服务。其本质上也是一种时间片轮转算法
+
+#### Exercise3
