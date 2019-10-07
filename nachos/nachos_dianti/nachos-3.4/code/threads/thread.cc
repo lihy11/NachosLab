@@ -36,6 +36,7 @@
 
 void Thread::init(char *threadName)
 {
+    DEBUG('t', "creating thread %s\n", threadName);
     this->priority = 3;
     this->ticks = 0;
     this->userID = 0;

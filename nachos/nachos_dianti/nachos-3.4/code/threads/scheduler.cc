@@ -256,7 +256,7 @@ Scheduler::priority(){
 */
 Thread* 
 Scheduler::runtimeRound(){
-
+    return (Thread *)readyList->Remove();
 }
 Thread* 
 Scheduler::multiPriorityQueue(){

@@ -19,4 +19,120 @@ Nachos系统中，没有设置复杂的线程调度算法。其调度算法可�
 
 - 在命令行添加`-rs 2`的情况下，时钟模拟器会初始化，并且定期向待处理的中断列表中发送时钟中断。Nachos在每条指令执行前都会检查中断列表，当需要处理中断时，则调用`timer.cc:TimerHandler()`函数，该函数会向中断列表插入下一个时钟中断，然后调用注册的中断处理函数`system.cc:TimeInteruptHandler()`，该函数检查当前是否还有进程等待，如果有则调用`Thread.cc:Yield()`函数，该函数将当前进程加入等待队列并选取下一个进程进行调度，选取原则是先来先服务。其本质上也是一种时间片轮转算法
 
-#### Exercise3
+#### Exercise3 可抢占的优先级调度算法：
+
+- 调度原理：对于每个进程来说，都具有相应的优先级，当优先级更高的进程就绪后，应该调度其上CPU而暂停当前进程的工作。
+- 调度时机：当前的Nachos系统`interupter.cc:OneTick()`函数代表了一次指令执行，函数内会检查当前是否有待处理中断，通常的操作系统中断处理都意味着一次进程调度，当中断处理结束之后，会设置标志位`YieldOnReturn=true`，之后检查这个标志位来决定是否需要进行进程调度。对这里进行更改，增加需要进行进程调度的原因：如果有优先级更高的进程在等待的话。代码变更为如下：
+```C++
+/*检查是否有优先级更高的进程等待，有的话则发生调度*/
+/*   interrupt.cc:  172   */
+if (yieldOnReturn || scheduler->checkPriority(currentThread))
+    { // if the timer device handler asked
+        // for a context switch, ok to do it now
+        yieldOnReturn = FALSE;
+        status = SystemMode; // yield is a kernel routine
+        currentThread->Yield();
+        status = old;
+    }
+/*  scheduler.cc:checkPriority(Thread* curT)*/
+/*检查是否存在优先级更高的进程等待 */
+bool Scheduler::checkPriority(Thread *curT)
+{
+    if(this->scheduleMethod != PRIORITY){
+        return false;
+    }
+    ListElement *first = readyList->getHead();
+    ListElement *ptr;
+
+    for (ptr = first; ptr != NULL; ptr = ptr->next)
+    {
+        if (curT->getPriority() > ((Thread *)ptr->item)->getPriority())
+        {
+            return true;
+        }
+    }
+}
+```
+- 调度算法： 在`scheduler.cc : findNextToRun()`函数中，是真正的进程调度方法。期作用是选取下一个上CPU运行的进程，因此对该函数进行变更，针对不同的调度方式进行判定，采取不同的调度算法，变更为如下代码：
+```C++
+Thread *
+Scheduler::FindNextToRun()
+{
+    switch(this->scheduleMethod){
+        case PRIORITY:   // 优先级调度
+        return priority();
+        case RR:    //   时间片轮转调度
+        return runtimeRound();
+        case MULTIQUEUE:  //多级反馈队列调度
+        return multiPriorityQueue();
+    }
+    
+}
+```
+- 运行测试：在`TreadTest.cc`中编写了简单的线程测试函数，依次优先级从低到高创建线程，由于main函数使用默认的3（最低优先级，0为最高）为优先级，因此可以预见到，在创建完成优先级为2的进程后，main函数会被抢占，知道再次获得CPU使用权才能创建优先级为1的进程，代码如下：
+```cpp
+void ThreadTest3(){
+    Thread* t3 = new Thread("thread 3", 0, 3);  //优先级3
+    t3->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+
+    Thread* t2 = new Thread("thread 2", 0, 2);// 优先级2
+    t2->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+
+    Thread* t1 = new Thread("thread 1", 0, 1); //优先级1
+    t1->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+}
+```
+- 测试结果：部分测试结果如下，可以看到main函数被抢占，之后在调度的过程中总是调度优先级高的线程，即使线程2主动放弃CPU，调度线程3上CPU，但是在运行时还是会切换回到进程2
+```
+Forking thread "thread 3" with func = 0x56561653, arg = 1
+Putting thread thread 3 on ready list.
+Forking thread "thread 2" with func = 0x56561653, arg = 1
+Putting thread thread 2 on ready list.
+Yielding thread "main"
+Putting thread main on ready list.
+Switching from thread "main" to thread "thread 2"
+我的名字是 : thread 2, 我的用户是 : 0, 我的tid是： 2
+...
+...
+Yielding thread "thread 2"
+Putting thread thread 2 on ready list.
+Switching from thread "thread 2" to thread "thread 3"
+Now in thread "thread 3"
+Yielding thread "thread 3"
+Putting thread thread 3 on ready list.
+Switching from thread "thread 3" to thread "thread 2"
+```
+#### Exercise 4  时间片轮转算法
+- 实现原理：为每个线程设置时间计数，当进程使用完指定数量的时间时，就就强迫进程进入等待，调度下一个进程。
+- 调度时机：这里依旧在上面提到的`interrupt.cc:  OneTick()`函数中增加线程调度的条件：当前线程时间用完，同时在函数开始时需要为当前的进程时间加一：`curThread->addTick()`代码如下：
+```cpp
+/*   interrupt.cc:  172   */
+ if (yieldOnReturn || scheduler->checkPriority(currentThread) || scheduler->checkRunTime(currentThread))
+    { // if the timer device handler asked
+        // for a context switch, ok to do it now
+        yieldOnReturn = FALSE;
+        status = SystemMode; // yield is a kernel routine
+        currentThread->clearTicks();  //清除运行时间
+        currentThread->Yield();
+        status = old;
+    }
+/*  scheduler.cc:  checkRunTime(Thread* curT)*/
+/*检查是否运行完成时间片*/
+bool
+Scheduler::checkRunTime(Thread* curT){
+    if(curT->getTicks() < this->RunTicks){  //RunTicks为调度器指定的整数，
+        return false;
+    }
+    return true;
+}
+```
+- 调度算法：在上面已经看到，在`scheduler::findNextToRun()`函数中进行调度算法判定，之后跳转至具体的调度算法，时间片轮转则是FCFS算法，代码如下：
+```cpp
+Thread* 
+Scheduler::runtimeRound(){
+    return (Thread *)readyList->Remove();
+}
+```

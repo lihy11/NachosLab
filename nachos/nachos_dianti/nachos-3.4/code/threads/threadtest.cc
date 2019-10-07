@@ -57,11 +57,23 @@ void ThreadTest1()
 */
 void SimpleThread2(int which)
 {
-    for (int i = 0; i < 3; i++)
+    if (which < 10)
     {
-        printf("我的名字是 : %s, 我的用户是 : %d, 我的tid是： %d\n",
-               currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
-        currentThread->Yield();
+        for (int i = 0; i < 3; i++)
+        {
+            printf("我的名字是 : %s, 我的用户是 : %d, 我的tid是： %d\n",
+                   currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
+            currentThread->Yield();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            printf("我的名字是 : %s, 我的用户是 : %d, 我的tid是： %d\n",
+                   currentThread->getName(), currentThread->getUserID(), currentThread->getTid());
+            currentThread->Yield();
+        }
     }
 }
 /*
@@ -85,20 +97,41 @@ void ThreadTest2()
     测试优先级线程调度算法
 */
 
-void ThreadTest3(){
-    Thread* t3 = new Thread("thread 3", 0, 3);
-    t3->Fork(SimpleThread2, (void*)1);
-    for(int i = 0; i > 30; i ++);
+void ThreadTest3()
+{
+    Thread *t3 = new Thread("thread 3", 0, 3);
+    t3->Fork(SimpleThread2, (void *)1);
+    for (int i = 0; i > 30; i++)
+        ;
 
-    Thread* t2 = new Thread("thread 2", 0, 2);
-    t2->Fork(SimpleThread2, (void*)1);
-    for(int i = 0; i > 30; i ++);
+    Thread *t2 = new Thread("thread 2", 0, 2);
+    t2->Fork(SimpleThread2, (void *)1);
+    for (int i = 0; i > 30; i++)
+        ;
 
-    Thread* t1 = new Thread("thread 1", 0, 1);
-    t1->Fork(SimpleThread2, (void*)1);
-    for(int i = 0; i > 30; i ++);
+    Thread *t1 = new Thread("thread 1", 0, 1);
+    t1->Fork(SimpleThread2, (void *)1);
+    for (int i = 0; i > 30; i++)
+        ;
 }
 
+void SimpleThread4(int which)
+{
+    for (int i = 0; i < 300; i++)
+    {
+      //  printf("我的名字是 : %s, 我的tick是： %d\n",
+        //       currentThread->getName(), currentThread->getTicks());
+    }
+}
+/*  时间片轮转算法 */
+void ThreadTest4()
+{
+    Thread *t1 = new Thread("thread 1");
+    Thread *t2 = new Thread("thread 2");
+    t1->Fork(SimpleThread4, (void *)1);
+    t2->Fork(SimpleThread4, (void *)1);
+    SimpleThread4(0);
+}
 //----------------------------------------------------------------------
 // ThreadTest
 // 	Invoke a test routine.
@@ -116,6 +149,9 @@ void ThreadTest()
         break;
     case 3:
         ThreadTest3();
+        break;
+    case 4:
+        ThreadTest4();
         break;
     default:
         printf("No test specified.\n");

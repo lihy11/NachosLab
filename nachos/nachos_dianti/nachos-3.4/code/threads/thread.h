@@ -147,7 +147,8 @@ public:
     int getUserID() { return userID; }
     int getPriority(){return this->priority;}
     int getTicks(){ return ticks;}
-    void addTick(){ this->ticks++;}
+    void addTick(){ this->ticks += 1;}
+    void clearTicks(){this->ticks = 0;}
 };
 
 // Magical machine-dependent routines, defined in switch.s

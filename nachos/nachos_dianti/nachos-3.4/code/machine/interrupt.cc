@@ -148,7 +148,8 @@ void Interrupt::Enable()
 void Interrupt::OneTick()
 {
     MachineStatus old = status;
-    currentThread->addTick();
+    currentThread->addTick();    //增加当前线程的时间使用计数
+    printf("Onetic\n");
     // advance simulated time
     if (status == SystemMode)
     {
@@ -169,11 +170,12 @@ void Interrupt::OneTick()
     while (CheckIfDue(FALSE))   // check for pending interrupts
         ;
     ChangeLevel(IntOff, IntOn); // re-enable interrupts
-    if (yieldOnReturn || scheduler->checkPriority(currentThread))
+    if (yieldOnReturn || scheduler->checkPriority(currentThread) || scheduler->checkRunTime(currentThread))
     { // if the timer device handler asked
         // for a context switch, ok to do it now
         yieldOnReturn = FALSE;
         status = SystemMode; // yield is a kernel routine
+        currentThread->clearTicks();
         currentThread->Yield();
         status = old;
     }
