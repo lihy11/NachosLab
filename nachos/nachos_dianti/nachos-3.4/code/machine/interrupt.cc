@@ -148,7 +148,7 @@ void Interrupt::Enable()
 void Interrupt::OneTick()
 {
     MachineStatus old = status;
-
+    currentThread->addTick();
     // advance simulated time
     if (status == SystemMode)
     {

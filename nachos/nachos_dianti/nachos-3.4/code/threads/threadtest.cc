@@ -81,6 +81,23 @@ void ThreadTest2()
     }
     SimpleThread2(0);
 }
+/*
+    测试优先级线程调度算法
+*/
+
+void ThreadTest3(){
+    Thread* t3 = new Thread("thread 3", 0, 3);
+    t3->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+
+    Thread* t2 = new Thread("thread 2", 0, 2);
+    t2->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+
+    Thread* t1 = new Thread("thread 1", 0, 1);
+    t1->Fork(SimpleThread2, (void*)1);
+    for(int i = 0; i > 30; i ++);
+}
 
 //----------------------------------------------------------------------
 // ThreadTest
@@ -96,6 +113,9 @@ void ThreadTest()
         break;
     case 2:
         ThreadTest2();
+        break;
+    case 3:
+        ThreadTest3();
         break;
     default:
         printf("No test specified.\n");

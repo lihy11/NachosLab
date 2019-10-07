@@ -47,7 +47,7 @@ private:
     std::vector<Thread *> threadPool;
     std::queue<int> tids;
     ThreadSchedulingMethod scheduleMethod;
-    static int RunTicks;
+    int RunTicks;
 public:
     /* @lihaiyang  申请一个tid，申请不到则反回-1 ,否则反回tid，并将线程指针加入线程池  */
     int aquireTid(Thread *t);

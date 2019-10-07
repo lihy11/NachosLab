@@ -29,7 +29,8 @@
 
 Scheduler::Scheduler()
 {
-    this->RunTicks = 200;
+    this->scheduleMethod = PRIORITY; //TODO 可调整
+    this->RunTicks = 100;
     readyList = new List;
     this->threadPool.clear();
     for (int i = 0; i < MAX_THREAD_NUMBER; i++)
@@ -177,12 +178,12 @@ int Scheduler::aquireTid(Thread *t)
 /**/
 void Scheduler::releaseTid(Thread *t)
 {
-    DEBUG('t', "DEBUG:  Thread addr : %x\n", t);
+  //  DEBUG('t', "DEBUG:  Thread addr : %x\n", t);
     if (t->getTid() == -1)
     {
         return;
     }
-    DEBUG('t', "DEBUG:  tid : %d\n", t->getTid());
+  //  DEBUG('t', "DEBUG:  tid : %d\n", t->getTid());
     tids.push(t->getTid());
     for (std::vector<Thread *>::iterator t0 = threadPool.begin(); t0 < threadPool.end(); t0++)
     {
