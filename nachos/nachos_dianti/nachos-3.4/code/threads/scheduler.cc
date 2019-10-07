@@ -29,13 +29,16 @@
 
 Scheduler::Scheduler()
 {
-    this->scheduleMethod = PRIORITY; //TODO 可调整
+    this->scheduleMethod = RR; //TODO 可调整
     this->RunTicks = 100;
     readyList = new List;
+    readyList2 = new List;
+    readyList3 = new List;
     this->threadPool.clear();
     for (int i = 0; i < MAX_THREAD_NUMBER; i++)
     {
         this->tids.push(i);
+        threadListLeval[i] = 0;
     }
 }
 
@@ -47,6 +50,8 @@ Scheduler::Scheduler()
 Scheduler::~Scheduler()
 {
     delete readyList;
+    delete readyList2;
+    delete readyList3;
 }
 
 //----------------------------------------------------------------------
@@ -62,7 +67,46 @@ void Scheduler::ReadyToRun(Thread *thread)
     DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append((void *)thread);
+    if (this->scheduleMethod == MULTIQUEUE)
+    { //多级反馈队列
+        if (checkRunTime(thread))
+        {
+            switch (this->threadListLeval[thread->getTid()])
+            {
+            case 0:
+                readyList2->Append(thread);
+                threadListLeval[thread->getTid()] = 2;
+                break;
+            case 2:
+            case 3:
+                threadListLeval[thread->getTid()] = 3;
+                readyList3->Append(thread);
+                break;
+            }
+        }
+        else
+        {
+            switch (this->threadListLeval[thread->getTid()])
+            {
+            case 0:
+                readyList->Append(thread);
+                threadListLeval[thread->getTid()] = 0;
+                break;
+            case 2:
+                readyList->Append(thread);
+                threadListLeval[thread->getTid()] = 2;
+                break;
+            case 3:
+                threadListLeval[thread->getTid()] = 3;
+                readyList2->Append(thread);
+                break;
+            }
+        }
+    }
+    else
+    {
+        readyList->Append((void *)thread);
+    }
 }
 
 //----------------------------------------------------------------------
@@ -76,15 +120,15 @@ void Scheduler::ReadyToRun(Thread *thread)
 Thread *
 Scheduler::FindNextToRun()
 {
-    switch(this->scheduleMethod){
-        case PRIORITY:
+    switch (this->scheduleMethod)
+    {
+    case PRIORITY:
         return priority();
-        case RR:
+    case RR:
         return runtimeRound();
-        case MULTIQUEUE:
+    case MULTIQUEUE:
         return multiPriorityQueue();
     }
-    
 }
 
 //----------------------------------------------------------------------
@@ -178,12 +222,12 @@ int Scheduler::aquireTid(Thread *t)
 /**/
 void Scheduler::releaseTid(Thread *t)
 {
-  //  DEBUG('t', "DEBUG:  Thread addr : %x\n", t);
+    //  DEBUG('t', "DEBUG:  Thread addr : %x\n", t);
     if (t->getTid() == -1)
     {
         return;
     }
-  //  DEBUG('t', "DEBUG:  tid : %d\n", t->getTid());
+    //  DEBUG('t', "DEBUG:  tid : %d\n", t->getTid());
     tids.push(t->getTid());
     for (std::vector<Thread *>::iterator t0 = threadPool.begin(); t0 < threadPool.end(); t0++)
     {
@@ -200,52 +244,85 @@ void Scheduler::releaseTid(Thread *t)
 */
 bool Scheduler::checkPriority(Thread *curT)
 {
-    if(this->scheduleMethod != PRIORITY){
-        return false;
-    }
-    ListElement *first = readyList->getHead();
-    ListElement *ptr;
-
-    for (ptr = first; ptr != NULL; ptr = ptr->next)
+    if (this->scheduleMethod == MULTIQUEUE)
     {
-        if (curT->getPriority() > ((Thread *)ptr->item)->getPriority())
+        int l = threadListLeval[curT->getTid()];
+        switch (l)
         {
-            return true;
+        case 0:
+            return false;
+        case 2:
+            return !readyList->IsEmpty();
+        case 3:
+            return (!readyList->IsEmpty()) && (!readyList2->IsEmpty());
+        }
+    }
+    else
+    {
+        if (this->scheduleMethod != PRIORITY)
+        {
+            return false;
+        }
+        ListElement *first = readyList->getHead();
+        ListElement *ptr;
+
+        for (ptr = first; ptr != NULL; ptr = ptr->next)
+        {
+            if (curT->getPriority() > ((Thread *)ptr->item)->getPriority())
+            {
+                return true;
+            }
         }
     }
 }
 /*
     检查是否运行完成时间片
 */
-bool
-Scheduler::checkRunTime(Thread* curT){
-    if(curT->getTicks() < this->RunTicks){
-        return false;
+bool Scheduler::checkRunTime(Thread *curT)
+{
+    if (scheduleMethod == MULTIQUEUE)
+    {
+        switch (threadListLeval[curT->getTid()])
+        {
+        case 0:
+            return curT->getTicks() > this->RunTicks;
+        case 2:
+            return curT->getTicks() > 2 * this->RunTicks;
+        case 3:
+            return curT->getTicks() > 4 * this->RunTicks;
+        }
     }
-    return true;
+    else
+    {
+        return curT->getTicks() > this->RunTicks;
+    }
 }
 /*
     基于优先级的抢占算法，当调度时依次遍历队列，选取其中优先级数值最小的进程。
 */
-Thread*
-Scheduler::priority(){
+Thread *
+Scheduler::priority()
+{
 
     ListElement *first = readyList->getHead();
     ListElement *ptr;
-    Thread* result = NULL;
+    Thread *result = NULL;
     int pri = 3;
     for (ptr = first; ptr != NULL; ptr = ptr->next)
     {
-        Thread* tmp = (Thread*)ptr->item;
+        Thread *tmp = (Thread *)ptr->item;
         if (tmp->getPriority() < pri)
         {
-           pri = tmp->getPriority();
-           result = tmp;
+            pri = tmp->getPriority();
+            result = tmp;
         }
     }
-    if(result == NULL){
+    if (result == NULL)
+    {
         return (Thread *)readyList->Remove();
-    }else{
+    }
+    else
+    {
         readyList->Remove(result);
         return result;
     }
@@ -254,11 +331,20 @@ Scheduler::priority(){
 /*
     时间片轮转算法，当当前进程时间片消耗完则发生调度
 */
-Thread* 
-Scheduler::runtimeRound(){
+Thread *
+Scheduler::runtimeRound()
+{
     return (Thread *)readyList->Remove();
 }
-Thread* 
-Scheduler::multiPriorityQueue(){
-
+/* 多级反馈队列*/
+Thread *
+Scheduler::multiPriorityQueue()
+{
+    if(!readyList->IsEmpty()){
+        return (Thread *)readyList->Remove();
+    }else if(!readyList2->IsEmpty()){
+        return (Thread *)readyList2->Remove();
+    }else{
+    return (Thread *)readyList3->Remove();
+    }
 }

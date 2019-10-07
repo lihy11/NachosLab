@@ -48,6 +48,10 @@ private:
     std::queue<int> tids;
     ThreadSchedulingMethod scheduleMethod;
     int RunTicks;
+
+    List* readyList2;
+    List* readyList3;
+    int threadListLeval[MAX_THREAD_NUMBER];
 public:
     /* @lihaiyang  申请一个tid，申请不到则反回-1 ,否则反回tid，并将线程指针加入线程池  */
     int aquireTid(Thread *t);

@@ -119,8 +119,8 @@ void SimpleThread4(int which)
 {
     for (int i = 0; i < 300; i++)
     {
-      //  printf("我的名字是 : %s, 我的tick是： %d\n",
-        //       currentThread->getName(), currentThread->getTicks());
+       printf("我的名字是 : %s, 我的tick是： %d\n",
+              currentThread->getName(), currentThread->getTicks());
     }
 }
 /*  时间片轮转算法 */

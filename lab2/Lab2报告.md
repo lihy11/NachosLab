@@ -136,3 +136,119 @@ Scheduler::runtimeRound(){
     return (Thread *)readyList->Remove();
 }
 ```
+
+#### Exercise5 多级反馈队列
+- 算法原理：将等待队列分为多个级别，优先级越高的队列时间片越短，当进程使用完当前时间片时，将其加入下一级等待队列，如果没有使用完当前时间片，则将其加入下一个优先级的队列中，当优先级高的队列不为空时，应该抢占当前优先级低的进程。
+- 调度时机：调度时机分别为当前时间片用完，出现中断处理行为，以及此算法特有的，更高级的队列上出现新的进程时，因此在上面优先级抢占算法中进行逻辑调整，当当前策略为多级反馈队列时，应该检查优先级更高的队列是否为空。代码如下：
+```cpp
+/*
+    检查是否存在优先级更高的进程等待
+*/
+bool Scheduler::checkPriority(Thread *curT)
+{
+    if (this->scheduleMethod == MULTIQUEUE)
+    {
+        int l = threadListLeval[curT->getTid()];
+        switch (l)
+        {
+        case 0:
+            return false;
+        case 2:
+            return !readyList->IsEmpty();
+        case 3:
+            return (!readyList->IsEmpty()) && (!readyList2->IsEmpty());
+        }
+    }
+    else
+    {
+        if (this->scheduleMethod != PRIORITY)
+        {
+            return false;
+        }
+        ListElement *first = readyList->getHead();
+        ListElement *ptr;
+
+        for (ptr = first; ptr != NULL; ptr = ptr->next)
+        {
+            if (curT->getPriority() > ((Thread *)ptr->item)->getPriority())
+            {
+                return true;
+            }
+        }
+    }
+}
+```
+- 实现细节：在算法实现上，主要需要主义在加入准备队列时，应该判断当前的进程是在哪个优先级队列中的，为此维护了一个列表`threadListLeval[]`，大小为最大进程数量，按照线程TID作为索引，标识其之前所在的队列，并且在加入准备队列时进行判断，代码如下：
+```cpp
+void Scheduler::ReadyToRun(Thread *thread)
+{
+    DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
+
+    thread->setStatus(READY);
+    if (this->scheduleMethod == MULTIQUEUE)
+    { //多级反馈队列
+        if (checkRunTime(thread))
+        {
+            switch (this->threadListLeval[thread->getTid()])
+            {
+            case 0:
+                readyList2->Append(thread);
+                threadListLeval[thread->getTid()] = 2;
+                break;
+            case 2:
+            case 3:
+                threadListLeval[thread->getTid()] = 3;
+                readyList3->Append(thread);
+                break;
+            }
+        }
+        else
+        {
+            switch (this->threadListLeval[thread->getTid()])
+            {
+            case 0:
+                readyList->Append(thread);
+                threadListLeval[thread->getTid()] = 0;
+                break;
+            case 2:
+                readyList->Append(thread);
+                threadListLeval[thread->getTid()] = 2;
+                break;
+            case 3:
+                threadListLeval[thread->getTid()] = 3;
+                readyList2->Append(thread);
+                break;
+            }
+        }
+    }
+    else
+    {
+        readyList->Append((void *)thread);
+    }
+}
+```
+- 同时，由于多级反馈队列没个队列的时间片大小不同，因此检查是否使用完时间片的函数也需要变更，代码如下：对每个队列级别的线程分别按照不同的时间片大小进行检查
+```cpp
+/*
+    检查是否运行完成时间片
+*/
+bool Scheduler::checkRunTime(Thread *curT)
+{
+    if (scheduleMethod == MULTIQUEUE)
+    {
+        switch (threadListLeval[curT->getTid()])
+        {
+        case 0:
+            return curT->getTicks() > this->RunTicks;
+        case 2:
+            return curT->getTicks() > 2 * this->RunTicks;
+        case 3:
+            return curT->getTicks() > 4 * this->RunTicks;
+        }
+    }
+    else
+    {
+        return curT->getTicks() > this->RunTicks;
+    }
+}
+```
