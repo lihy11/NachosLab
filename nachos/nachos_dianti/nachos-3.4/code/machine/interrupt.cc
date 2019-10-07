@@ -149,7 +149,7 @@ void Interrupt::OneTick()
 {
     MachineStatus old = status;
     currentThread->addTick();    //增加当前线程的时间使用计数
-    printf("Onetic\n");
+ //   printf("Onetic\n");
     // advance simulated time
     if (status == SystemMode)
     {
