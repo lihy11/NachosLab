@@ -107,10 +107,10 @@ Switching from thread "thread 3" to thread "thread 2"
 ```
 #### Exercise 4  时间片轮转算法
 - 实现原理：为每个线程设置时间计数，当进程使用完指定数量的时间时，就就强迫进程进入等待，调度下一个进程。
-- 调度时机：这里依旧在上面提到的`interrupt.cc:  OneTick()`函数中增加线程调度的条件：当前线程时间用完，同时在函数开始时需要为当前的进程时间加一：`curThread->addTick()`代码如下：
+- 调度时机：**这里依旧在上面提到的`interrupt.cc:  OneTick()`函数中增加线程调度的条件：当前线程时间用完，同时在函数开始时需要为当前的进程时间加一：`curThread->addTick()`代码如下：** 上述为错误描述，在查看了linux源代码之后，发现其对进程时间片更新，对系统时间更新的操作其实都发生在时钟中断处理函数中，因此，此处应该将相应的处理也加入到时钟处理函数中，如下：
 ```cpp
 /*   interrupt.cc:  172   */
- if (yieldOnReturn || scheduler->checkPriority(currentThread) || scheduler->checkRunTime(currentThread))
+/* if (yieldOnReturn || scheduler->checkPriority(currentThread) || scheduler->checkRunTime(currentThread))
     { // if the timer device handler asked
         // for a context switch, ok to do it now
         yieldOnReturn = FALSE;
@@ -119,6 +119,17 @@ Switching from thread "thread 3" to thread "thread 2"
         currentThread->Yield();
         status = old;
     }
+    */
+static void
+TimerInterruptHandler(int dummy)
+{
+    DEBUG('t', "DEBUG: Time Handler of Thread %d", currentThread->getTid());
+    if (interrupt->getStatus() != IdleMode && scheduler->checkRunTime(currentThread)){
+        interrupt->YieldOnReturn();
+    }else{
+        currentThread->addTick();    //增加当前线程的时间使用计数
+    }
+}
 /*  scheduler.cc:  checkRunTime(Thread* curT)*/
 /*检查是否运行完成时间片*/
 bool
