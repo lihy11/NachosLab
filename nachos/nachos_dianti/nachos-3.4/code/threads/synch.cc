@@ -279,3 +279,27 @@ class ReadWriteCondition{
         lock->Release();
     }; 
 };
+/*  进程同步，多个进程同时到达指定位置可以继续执行  */
+class Barrier{
+    Lock* lock;
+    int waitingNum;  // 已有几个线程到达指定位置
+    int runNum;  //需要几个线程到达指定位置
+    Condition* toRun;
+
+    void run(){
+        /*
+        ... 执行各个进程相关操作，到达指定位置
+        */
+        lock->Acquire();
+        if(waitingNum < runNum){
+            waitingNum ++;
+            toRun->Wait(lock);
+        }else{
+            toRun->Broadcast(lock);
+        }
+        /*
+        ... 执行后续操作
+        */
+
+    }
+};
