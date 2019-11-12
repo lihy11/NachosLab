@@ -189,10 +189,12 @@ bool Machine::WriteMem(int addr, int size, int value)
 ExceptionType
 Machine::Translate(int virtAddr, int *physAddr, int size, bool writing)
 {
+
 	int i;
 	unsigned int vpn, offset;
 	TranslationEntry *entry;
 	unsigned int pageFrame;
+	ExceptionType exception = NoException;
 
 	DEBUG('a', "\tTranslate 0x%x, %s: ", virtAddr, writing ? "write" : "read");
 
@@ -213,36 +215,17 @@ Machine::Translate(int virtAddr, int *physAddr, int size, bool writing)
 	offset = (unsigned)virtAddr % PageSize;
 
 	if (tlb == NULL)
-	{ // => page table => vpn is index into table
-		if (vpn >= pageTableSize)
-		{
-			DEBUG('a', "virtual page # %d too large for page table size %d!\n",
-				  virtAddr, pageTableSize);
-			return AddressErrorException;
-		}
-		else if (!pageTable[vpn].valid)
-		{
-			DEBUG('a', "virtual page # %d too large for page table size %d!\n",
-				  virtAddr, pageTableSize);
-			return PageFaultException;
-		}
-		entry = &pageTable[vpn];
+	{
+		entry = translatePageTable(vpn, offset, &exception);
 	}
 	else
 	{
-		for (entry = NULL, i = 0; i < TLBSize; i++)
-			if (tlb[i].valid && (tlb[i].virtualPage == vpn))
-			{
-				entry = &tlb[i]; // FOUND!
-				break;
-			}
-		if (entry == NULL)
-		{ // not found
-			DEBUG('a', "*** no valid TLB entry found for this virtual page!\n");
-			return PageFaultException; // really, this is a TLB fault,
-									   // the page may be in memory,
-									   // but not in the TLB
-		}
+		entry = translateTlb(vpn, offset, &exception);
+	}
+
+	if (exception != NoException)
+	{
+		return exception;
 	}
 
 	if (entry->readOnly && writing)
@@ -266,4 +249,143 @@ Machine::Translate(int virtAddr, int *physAddr, int size, bool writing)
 	ASSERT((*physAddr >= 0) && ((*physAddr + size) <= MemorySize));
 	DEBUG('a', "phys addr = 0x%x\n", *physAddr);
 	return NoException;
+}
+
+TranslationEntry *
+Machine::translateTlb(int vpn, int offset, ExceptionType *exception)
+{
+	int i = 0;
+	TranslationEntry *entry;
+	for (entry = NULL, i = 0; i < TLBSize; i++)
+	{
+		if (tlb[i].valid && (tlb[i].virtualPage == vpn))
+		{
+			entry = &tlb[i]; // FOUND!
+			if (replaceMethod == 1)
+			{ //LRU
+				entry->count = 0;
+			}
+		}
+		else
+		{
+			entry->count++;
+		}
+	}
+	if (entry == NULL)
+	{ // not found
+		DEBUG('a', "*** no valid TLB entry found for this virtual page!\n");
+		*exception = PageFaultException; // really, this is a TLB fault,
+										 // the page may be in memory,
+										 // but not in the TLB
+	}
+	return entry;
+}
+
+TranslationEntry *
+Machine::translatePageTable(int vpn, int offset, ExceptionType *exception)
+{
+	unsigned int virtAddr = vpn * PageSize + offset;
+	TranslationEntry *entry;
+	// => page table => vpn is index into table
+	if (vpn >= pageTableSize)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		*exception = AddressErrorException;
+		return entry;
+	}
+	else if (!pageTable[vpn].valid)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		*exception = PageFaultException;
+		return entry;
+	}
+	entry = &pageTable[vpn];
+	return entry;
+}
+/*
+	1. 查找页表，找到对应的页表项
+	2. 选择一个tlb项进行替换
+*/
+ExceptionType
+Machine::replaceTlb(int virtAddr)
+{
+	unsigned int vpn, offset;
+	TranslationEntry *entry;
+
+	vpn = (unsigned)virtAddr / PageSize;
+	offset = (unsigned)virtAddr % PageSize;
+
+	if (vpn >= pageTableSize)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		return AddressErrorException;
+	}
+	else if (!pageTable[vpn].valid)
+	{
+		DEBUG('a', "virtual page # %d not valid\n", virtAddr);
+		return PageFaultException;
+	}
+	entry = &pageTable[vpn];
+
+	TranslationEntry *replaceEntry = selectOne(tlb, TLBSize);
+
+	*replaceEntry = *entry;
+
+	return NoException;
+}
+
+/*
+	@author lihaiyang
+	1. virtAddr位置未分配物理页面，选择一个空闲的物理页面分配，如果物理页面不足，
+		则选择一个物理页面替换掉（当前直接报错）
+	2. virtAddr位置的物理页面没有在内存中，需要从磁盘调入物理页面，
+		entry中应该存放了物理磁盘的地址（此处用内存模拟磁盘，磁盘地址即为某个内存地址）
+*/
+ExceptionType
+Machine::replacePageTable(int virtAddr){
+	
+}
+/*
+	在指定的列表中选择一个条目，可以使用不同的算法
+	1. LRU, TranslationEntry 条目中的count变量记录了条目的上一次使用离现在有多久，每当
+		一个条目hit时，将其count设置为0， 其余所有count ++，最后选择一个count数值最大的条目，
+		就是最不经常使用的条目，将其反回替换
+	2. 先进先出 entry中的count数值记录了entry进入tlb的时间长短，每次替换新的entry进入tlb， 则将其count设置为0
+		每次hit都将所有的entry的count++，替换时选择最大的count的entry替换
+	3. 随机算法  随机选择一个替换
+*/
+TranslationEntry *
+selectOne(TranslationEntry *list, int size)
+{
+	int selectMethod = 1;
+	switch (selectMethod)
+	{
+	case 1: // LRU
+	case 2: // 先进先出
+	{
+		int max = 0, pos = 0;
+		for (int i = 0; i < size; i++)
+		{
+			if (!list[i].use)
+				return &list[i];
+		}
+		for (int i = 0; i < size; i++)
+		{
+			if (list[i].count > max)
+			{
+				pos = i;
+				max = list[i].count;
+			}
+		}
+		list[pos].count = 0;
+		return &list[pos];
+	}
+	case 3:
+	{
+		return &list[0];
+	}
+	}
 }

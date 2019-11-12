@@ -25,6 +25,9 @@
 #include "system.h"
 #include "syscall.h"
 
+
+#include "machine.h"
+#include "system.h"
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -56,6 +59,17 @@ void ExceptionHandler(ExceptionType which)
     {
         DEBUG('a', "Shutdown, initiated by user program.\n");
         interrupt->Halt();
+    }
+    else if(which == PageFaultException){
+        /*
+            虚拟内存缺页中断。
+            1.对于TLB， 用需要替换的地址替换TLB中现有的某一项，
+            2.对于页表，需要将对应的磁盘数据读取至内存，为其分配一个物理内存，并在页表中添加其转换关系。
+        */
+        DEBUG('a', "Page fault exception of addr %x.\n", machine->ReadRegister(BadVAddrReg));
+        if(machine->tlb != NULL){
+
+        }
     }
     else
     {

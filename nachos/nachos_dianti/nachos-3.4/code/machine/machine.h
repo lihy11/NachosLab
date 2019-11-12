@@ -25,7 +25,7 @@
 #include "utility.h"
 #include "translate.h"
 #include "disk.h"
-
+#include "List.h"
 // Definitions related to the size, and format of user memory
 
 #define PageSize 	SectorSize 	// set the page size equal to
@@ -146,6 +146,10 @@ class Machine {
     void Debugger();		// invoke the user program debugger
     void DumpState();		// print the user CPU and memory state 
 
+	TranslationEntry* translateTlb(int vpn, int offset, ExceptionType* exception);
+	TranslationEntry* translatePageTable(int vpn, int offset, ExceptionType* exception);
+    ExceptionType replaceTlb(int virtAddr);   //选取一个tlb替换掉
+	ExceptionType replacePageTable(int virtAddr);   // 选取一个页表页替换掉
 
 // Data structures -- all of these are accessible to Nachos kernel code.
 // "public" for convenience.
@@ -178,7 +182,6 @@ class Machine {
 
     TranslationEntry *tlb;		// this pointer should be considered 
 					// "read-only" to Nachos kernel code
-
     TranslationEntry *pageTable;
     unsigned int pageTableSize;
 
@@ -187,6 +190,7 @@ class Machine {
 				// simulated instruction
     int runUntilTime;		// drop back into the debugger when simulated
 				// time reaches this value
+	int replaceMethod;  // 替换策略，1. LRU， 2. 先进先出，3. 随机
 };
 
 extern void ExceptionHandler(ExceptionType which);
@@ -211,4 +215,5 @@ unsigned short ShortToHost(unsigned short shortword);
 unsigned int WordToMachine(unsigned int word);
 unsigned short ShortToMachine(unsigned short shortword);
 
+TranslationEntry* selectOne(TranslationEntry* list, int size);
 #endif // MACHINE_H
