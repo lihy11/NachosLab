@@ -343,12 +343,63 @@ Machine::replaceTlb(int virtAddr)
 		则选择一个物理页面替换掉（当前直接报错）
 	2. virtAddr位置的物理页面没有在内存中，需要从磁盘调入物理页面，
 		entry中应该存放了物理磁盘的地址（此处用内存模拟磁盘，磁盘地址即为某个内存地址）
+	解决：在entry中加入标识位，on disk，表示当前页表缓存在磁盘上，diskAddr表示当前页面在磁盘的位置
+	在machine中创建虚拟的内存空间disk来模拟磁盘，为列表形式，忽略磁盘的数据管理等操作。
 */
 ExceptionType
-Machine::replacePageTable(int virtAddr){
-	
+Machine::replacePageTable(int virtAddr)
+{
+	unsigned int vpn, offset;
+	TranslationEntry *entry;
+
+	vpn = (unsigned)virtAddr / PageSize;
+	offset = (unsigned)virtAddr % PageSize;
+
+	if (vpn >= pageTableSize)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		return AddressErrorException;
+	}
+
+	int *pageFromDisk = NULL;
+	if (pageTable[vpn].onDisk)
+	{ //页面在磁盘，从磁盘重新读取页面到pageFromDisk
+		for (ListElement *page = disk->getHead(); page != NULL; page = page->next)
+		{
+			if ((int)page == pageTable[vpn].diskAddr)
+			{
+				pageFromDisk = (int *)page;
+				break;
+			}
+		}
+	}
+	//分配一个物理页面，并更新页表
+	int pageNO = findNullPyhPage();
+	if (pageNO == -1)
+	{ //物理页面满
+
+		TranslationEntry *replacePage = selectOne(pageTable, pageTableSize); //寻找替换页面
+
+		int *diskPage = new int[PageSize / 4]; //将数据拷贝存储到磁盘
+		memcpy(diskPage, mainMemory + replacePage->physicalPage * PageSize, PageSize);
+		disk->Append((void *)diskPage);
+
+		replacePage->onDisk = true; //更新替换页表项
+		replacePage->diskAddr = (int)diskPage;
+		pageNO = replacePage->physicalPage;
+	}
+	pageTable[vpn].count = 0; //更新当前页表项
+	pageTable[vpn].physicalPage = pageNO;
+	pageTable[vpn].valid = true;
+
+	if (pageFromDisk != NULL)
+	{ //拷贝磁盘数据
+		memcpy(mainMemory + pageNO * PageSize, pageFromDisk, PageSize);
+	}
 }
 /*
+	@author lihaiyang
 	在指定的列表中选择一个条目，可以使用不同的算法
 	1. LRU, TranslationEntry 条目中的count变量记录了条目的上一次使用离现在有多久，每当
 		一个条目hit时，将其count设置为0， 其余所有count ++，最后选择一个count数值最大的条目，
@@ -388,4 +439,19 @@ selectOne(TranslationEntry *list, int size)
 		return &list[0];
 	}
 	}
+}
+/* 
+	@author lihaiyang
+*/
+int Machine::findNullPyhPage()
+{
+	for (int i = 0; i < NumPhysPages; i++)
+	{
+		if (pageUsage[i] == false)
+		{
+			pageUsage[i] = true;
+			return i;
+		}
+	}
+	return -1;
 }

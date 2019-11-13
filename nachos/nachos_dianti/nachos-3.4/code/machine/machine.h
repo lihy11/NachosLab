@@ -1,4 +1,4 @@
-// machine.h 
+// machine.h
 //	Data structures for simulating the execution of user programs
 //	running on top of Nachos.
 //
@@ -8,14 +8,14 @@
 //	the kernel is loaded into a separate memory region from user
 //	programs, and accesses to kernel memory are not translated or paged.
 //
-//	In Nachos, user programs are executed one instruction at a time, 
+//	In Nachos, user programs are executed one instruction at a time,
 //	by the simulator.  Each memory reference is translated, checked
 //	for errors, etc.
 //
 //  DO NOT CHANGE -- part of the machine emulation
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #ifndef MACHINE_H
@@ -28,28 +28,30 @@
 #include "List.h"
 // Definitions related to the size, and format of user memory
 
-#define PageSize 	SectorSize 	// set the page size equal to
-					// the disk sector size, for
-					// simplicity
+#define PageSize SectorSize // set the page size equal to
+							// the disk sector size, for
+							// simplicity
 
-#define NumPhysPages    32
-#define MemorySize 	(NumPhysPages * PageSize)
-#define TLBSize		4		// if there is a TLB, make it small
+#define NumPhysPages 32
+#define MemorySize (NumPhysPages * PageSize)
+#define TLBSize 4 // if there is a TLB, make it small
 
-enum ExceptionType { NoException,           // Everything ok!
-		     SyscallException,      // A program executed a system call.
-		     PageFaultException,    // No valid translation found
-		     ReadOnlyException,     // Write attempted to page marked 
-					    // "read-only"
-		     BusErrorException,     // Translation resulted in an 
-					    // invalid physical address
-		     AddressErrorException, // Unaligned reference or one that
-					    // was beyond the end of the
-					    // address space
-		     OverflowException,     // Integer overflow in add or sub.
-		     IllegalInstrException, // Unimplemented or reserved instr.
-		     
-		     NumExceptionTypes
+enum ExceptionType
+{
+	NoException,		   // Everything ok!
+	SyscallException,	  // A program executed a system call.
+	PageFaultException,	// No valid translation found
+	ReadOnlyException,	 // Write attempted to page marked
+						   // "read-only"
+	BusErrorException,	 // Translation resulted in an
+						   // invalid physical address
+	AddressErrorException, // Unaligned reference or one that
+						   // was beyond the end of the
+						   // address space
+	OverflowException,	 // Integer overflow in add or sub.
+	IllegalInstrException, // Unimplemented or reserved instr.
+
+	NumExceptionTypes
 };
 
 // User program CPU state.  The full set of MIPS registers, plus a few
@@ -57,19 +59,19 @@ enum ExceptionType { NoException,           // Everything ok!
 // any two instructions (thus we need to keep track of things like load
 // delay slots, etc.)
 
-#define StackReg	29	// User's stack pointer
-#define RetAddrReg	31	// Holds return address for procedure calls
-#define NumGPRegs	32	// 32 general purpose registers on MIPS
-#define HiReg		32	// Double register to hold multiply result
-#define LoReg		33
-#define PCReg		34	// Current program counter
-#define NextPCReg	35	// Next program counter (for branch delay) 
-#define PrevPCReg	36	// Previous program counter (for debugging)
-#define LoadReg		37	// The register target of a delayed load.
-#define LoadValueReg 	38	// The value to be loaded by a delayed load.
-#define BadVAddrReg	39	// The failing virtual address on an exception
+#define StackReg 29   // User's stack pointer
+#define RetAddrReg 31 // Holds return address for procedure calls
+#define NumGPRegs 32  // 32 general purpose registers on MIPS
+#define HiReg 32	  // Double register to hold multiply result
+#define LoReg 33
+#define PCReg 34		// Current program counter
+#define NextPCReg 35	// Next program counter (for branch delay)
+#define PrevPCReg 36	// Previous program counter (for debugging)
+#define LoadReg 37		// The register target of a delayed load.
+#define LoadValueReg 38 // The value to be loaded by a delayed load.
+#define BadVAddrReg 39  // The failing virtual address on an exception
 
-#define NumTotalRegs 	40
+#define NumTotalRegs 40
 
 // The following class defines an instruction, represented in both
 // 	undecoded binary form
@@ -78,25 +80,26 @@ enum ExceptionType { NoException,           // Everything ok!
 //	    registers to act on
 //	    any immediate operand value
 
-class Instruction {
-  public:
-    void Decode();	// decode the binary representation of the instruction
+class Instruction
+{
+public:
+	void Decode(); // decode the binary representation of the instruction
 
-    unsigned int value; // binary representation of the instruction
+	unsigned int value; // binary representation of the instruction
 
-    char opCode;     // Type of instruction.  This is NOT the same as the
-    		     // opcode field from the instruction: see defs in mips.h
-    char rs, rt, rd; // Three registers from instruction.
-    int extra;       // Immediate or target or shamt field or offset.
-                     // Immediates are sign-extended.
+	char opCode;	 // Type of instruction.  This is NOT the same as the
+					 // opcode field from the instruction: see defs in mips.h
+	char rs, rt, rd; // Three registers from instruction.
+	int extra;		 // Immediate or target or shamt field or offset.
+					 // Immediates are sign-extended.
 };
 
-// The following class defines the simulated host workstation hardware, as 
+// The following class defines the simulated host workstation hardware, as
 // seen by user programs -- the CPU registers, main memory, etc.
-// User programs shouldn't be able to tell that they are running on our 
-// simulator or on the real hardware, except 
+// User programs shouldn't be able to tell that they are running on our
+// simulator or on the real hardware, except
 //	we don't support floating point instructions
-//	the system call interface to Nachos is not the same as UNIX 
+//	the system call interface to Nachos is not the same as UNIX
 //	  (10 system calls in Nachos vs. 200 in UNIX!)
 // If we were to implement more of the UNIX system calls, we ought to be
 // able to run Nachos on top of Nachos!
@@ -104,100 +107,102 @@ class Instruction {
 // The procedures in this class are defined in machine.cc, mipssim.cc, and
 // translate.cc.
 
-class Machine {
-  public:
-    Machine(bool debug);	// Initialize the simulation of the hardware
-				// for running user programs
-    ~Machine();			// De-allocate the data structures
+class Machine
+{
+public:
+	Machine(bool debug); // Initialize the simulation of the hardware
+		// for running user programs
+	~Machine(); // De-allocate the data structures
 
-// Routines callable by the Nachos kernel
-    void Run();	 		// Run a user program
+	// Routines callable by the Nachos kernel
+	void Run(); // Run a user program
 
-    int ReadRegister(int num);	// read the contents of a CPU register
+	int ReadRegister(int num); // read the contents of a CPU register
 
-    void WriteRegister(int num, int value);
-				// store a value into a CPU register
+	void WriteRegister(int num, int value);
+	// store a value into a CPU register
 
+	// Routines internal to the machine simulation -- DO NOT call these
 
-// Routines internal to the machine simulation -- DO NOT call these 
+	void OneInstruction(Instruction *instr);
+	// Run one instruction of a user program.
+	void DelayedLoad(int nextReg, int nextVal);
+	// Do a pending delayed load (modifying a reg)
 
-    void OneInstruction(Instruction *instr); 	
-    				// Run one instruction of a user program.
-    void DelayedLoad(int nextReg, int nextVal);  	
-				// Do a pending delayed load (modifying a reg)
-    
-    bool ReadMem(int addr, int size, int* value);
-    bool WriteMem(int addr, int size, int value);
-    				// Read or write 1, 2, or 4 bytes of virtual 
-				// memory (at addr).  Return FALSE if a 
-				// correct translation couldn't be found.
-    
-    ExceptionType Translate(int virtAddr, int* physAddr, int size,bool writing);
-    				// Translate an address, and check for 
-				// alignment.  Set the use and dirty bits in 
-				// the translation entry appropriately,
-    				// and return an exception code if the 
-				// translation couldn't be completed.
+	bool ReadMem(int addr, int size, int *value);
+	bool WriteMem(int addr, int size, int value);
+	// Read or write 1, 2, or 4 bytes of virtual
+	// memory (at addr).  Return FALSE if a
+	// correct translation couldn't be found.
 
-    void RaiseException(ExceptionType which, int badVAddr);
-				// Trap to the Nachos kernel, because of a
-				// system call or other exception.  
+	ExceptionType Translate(int virtAddr, int *physAddr, int size, bool writing);
+	// Translate an address, and check for
+	// alignment.  Set the use and dirty bits in
+	// the translation entry appropriately,
+	// and return an exception code if the
+	// translation couldn't be completed.
 
-    void Debugger();		// invoke the user program debugger
-    void DumpState();		// print the user CPU and memory state 
+	void RaiseException(ExceptionType which, int badVAddr);
+	// Trap to the Nachos kernel, because of a
+	// system call or other exception.
 
-	TranslationEntry* translateTlb(int vpn, int offset, ExceptionType* exception);
-	TranslationEntry* translatePageTable(int vpn, int offset, ExceptionType* exception);
-    ExceptionType replaceTlb(int virtAddr);   //选取一个tlb替换掉
-	ExceptionType replacePageTable(int virtAddr);   // 选取一个页表页替换掉
+	void Debugger();  // invoke the user program debugger
+	void DumpState(); // print the user CPU and memory state
 
-// Data structures -- all of these are accessible to Nachos kernel code.
-// "public" for convenience.
-//
-// Note that *all* communication between the user program and the kernel 
-// are in terms of these data structures.
+	TranslationEntry *translateTlb(int vpn, int offset, ExceptionType *exception);
+	TranslationEntry *translatePageTable(int vpn, int offset, ExceptionType *exception);
+	ExceptionType replaceTlb(int virtAddr);		  //选取一个tlb替换掉
+	ExceptionType replacePageTable(int virtAddr); // 选取一个页表页替换掉
+	int findNullPyhPage();						  //反回一个可以使用的物理页面，如果没有，反回-1，否则反回物理页面编号
 
-    char *mainMemory;		// physical memory to store user program,
-				// code and data, while executing
-    int registers[NumTotalRegs]; // CPU registers, for executing user programs
+	// Data structures -- all of these are accessible to Nachos kernel code.
+	// "public" for convenience.
+	//
+	// Note that *all* communication between the user program and the kernel
+	// are in terms of these data structures.
 
+	char *mainMemory; // physical memory to store user program,
+		// code and data, while executing
+	int registers[NumTotalRegs]; // CPU registers, for executing user programs
 
-// NOTE: the hardware translation of virtual addresses in the user program
-// to physical addresses (relative to the beginning of "mainMemory")
-// can be controlled by one of:
-//	a traditional linear page table
-//  	a software-loaded translation lookaside buffer (tlb) -- a cache of 
-//	  mappings of virtual page #'s to physical page #'s
-//
-// If "tlb" is NULL, the linear page table is used
-// If "tlb" is non-NULL, the Nachos kernel is responsible for managing
-//	the contents of the TLB.  But the kernel can use any data structure
-//	it wants (eg, segmented paging) for handling TLB cache misses.
-// 
-// For simplicity, both the page table pointer and the TLB pointer are
-// public.  However, while there can be multiple page tables (one per address
-// space, stored in memory), there is only one TLB (implemented in hardware).
-// Thus the TLB pointer should be considered as *read-only*, although 
-// the contents of the TLB are free to be modified by the kernel software.
+	// NOTE: the hardware translation of virtual addresses in the user program
+	// to physical addresses (relative to the beginning of "mainMemory")
+	// can be controlled by one of:
+	//	a traditional linear page table
+	//  	a software-loaded translation lookaside buffer (tlb) -- a cache of
+	//	  mappings of virtual page #'s to physical page #'s
+	//
+	// If "tlb" is NULL, the linear page table is used
+	// If "tlb" is non-NULL, the Nachos kernel is responsible for managing
+	//	the contents of the TLB.  But the kernel can use any data structure
+	//	it wants (eg, segmented paging) for handling TLB cache misses.
+	//
+	// For simplicity, both the page table pointer and the TLB pointer are
+	// public.  However, while there can be multiple page tables (one per address
+	// space, stored in memory), there is only one TLB (implemented in hardware).
+	// Thus the TLB pointer should be considered as *read-only*, although
+	// the contents of the TLB are free to be modified by the kernel software.
 
-    TranslationEntry *tlb;		// this pointer should be considered 
-					// "read-only" to Nachos kernel code
-    TranslationEntry *pageTable;
-    unsigned int pageTableSize;
+	TranslationEntry *tlb; // this pointer should be considered
+						   // "read-only" to Nachos kernel code
+	TranslationEntry *pageTable;
+	unsigned int pageTableSize;
 
-  private:
-    bool singleStep;		// drop back into the debugger after each
-				// simulated instruction
-    int runUntilTime;		// drop back into the debugger when simulated
-				// time reaches this value
-	int replaceMethod;  // 替换策略，1. LRU， 2. 先进先出，3. 随机
+	List *disk;					  //虚拟磁盘
+	bool pageUsage[NumPhysPages]; //物理页面管理bitmap
+
+private:
+	bool singleStep; // drop back into the debugger after each
+		// simulated instruction
+	int runUntilTime;  // drop back into the debugger when simulated
+					   // time reaches this value
+	int replaceMethod; // 替换策略，1. LRU， 2. 先进先出，3. 随机
 };
 
 extern void ExceptionHandler(ExceptionType which);
-				// Entry point into Nachos for handling
-				// user system calls and exceptions
-				// Defined in exception.cc
-
+// Entry point into Nachos for handling
+// user system calls and exceptions
+// Defined in exception.cc
 
 // Routines for converting Words and Short Words to and from the
 // simulated machine's format of little endian.  If the host machine
@@ -215,5 +220,5 @@ unsigned short ShortToHost(unsigned short shortword);
 unsigned int WordToMachine(unsigned int word);
 unsigned short ShortToMachine(unsigned short shortword);
 
-TranslationEntry* selectOne(TranslationEntry* list, int size);
+TranslationEntry *selectOne(TranslationEntry *list, int size);
 #endif // MACHINE_H
