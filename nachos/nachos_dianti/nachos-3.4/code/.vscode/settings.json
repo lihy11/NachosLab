@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "queue": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp"
     }
 }

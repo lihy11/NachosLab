@@ -281,6 +281,8 @@ Machine::translateTlb(int vpn, int offset, ExceptionType *exception)
 	return entry;
 }
 
+/*
+*/
 TranslationEntry *
 Machine::translatePageTable(int vpn, int offset, ExceptionType *exception)
 {
@@ -304,7 +306,34 @@ Machine::translatePageTable(int vpn, int offset, ExceptionType *exception)
 	entry = &pageTable[vpn];
 	return entry;
 }
+
 /*
+倒排页表查找算法
+*/
+TranslationEntry*
+Machine::translatePageTableDes(int vpn, int offset, ExceptionType *exception ){
+	unsigned int virtAddr = vpn * PageSize + offset;
+	TranslationEntry *entry;
+	// => page table => vpn is index into table
+	if (vpn >= pageTableSize)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		*exception = AddressErrorException;
+		return entry;
+	}
+	for(int i = 0; i < tableSize; i ++){
+		if(pageTable[i].valid && pageTable[i].virtualPage == vpn){
+			entry = &pageTable[i];
+		}
+	}
+	if(entry == NULL){
+		*exception = PageFaultException;
+	}
+	return entry;
+}
+/*
+	@author lihaiyang
 	1. 查找页表，找到对应的页表项
 	2. 选择一个tlb项进行替换
 */
@@ -398,6 +427,66 @@ Machine::replacePageTable(int virtAddr)
 		memcpy(mainMemory + pageNO * PageSize, pageFromDisk, PageSize);
 	}
 }
+/*
+倒排也表缺页异常处理算法
+*/
+ExceptionType
+Machine::replacePageTableDes(int virtAddr, List* pageTable)
+{
+	unsigned int vpn, offset;
+	TranslationEntry *entry;
+
+	vpn = (unsigned)virtAddr / PageSize;
+	offset = (unsigned)virtAddr % PageSize;
+
+	if (vpn >= pageTableSize)
+	{
+		DEBUG('a', "virtual page # %d too large for page table size %d!\n",
+			  virtAddr, pageTableSize);
+		return AddressErrorException;
+	}
+	/* 遍历页表 */
+	for((ListElement*) entry=pageTable->getHead(); entry != NULL; entry = (ListElement*)entry->next){
+
+	}
+
+	int *pageFromDisk = NULL;
+	if (pageTable[vpn].onDisk)
+	{ //页面在磁盘，从磁盘重新读取页面到pageFromDisk
+		for (ListElement *page = disk->getHead(); page != NULL; page = page->next)
+		{
+			if ((int)page == pageTable[vpn].diskAddr)
+			{
+				pageFromDisk = (int *)page;
+				break;
+			}
+		}
+	}
+	//分配一个物理页面，并更新页表
+	int pageNO = findNullPyhPage();
+	if (pageNO == -1)
+	{ //物理页面满
+
+		TranslationEntry *replacePage = selectOne(pageTable, pageTableSize); //寻找替换页面
+
+		int *diskPage = new int[PageSize / 4]; //将数据拷贝存储到磁盘
+		memcpy(diskPage, mainMemory + replacePage->physicalPage * PageSize, PageSize);
+		disk->Append((void *)diskPage);
+
+		replacePage->onDisk = true; //更新替换页表项
+		replacePage->diskAddr = (int)diskPage;
+		pageNO = replacePage->physicalPage;
+	}
+	pageTable[vpn].count = 0; //更新当前页表项
+	pageTable[vpn].physicalPage = pageNO;
+	pageTable[vpn].valid = true;
+
+	if (pageFromDisk != NULL)
+	{ //拷贝磁盘数据
+		memcpy(mainMemory + pageNO * PageSize, pageFromDisk, PageSize);
+	}
+}
+
 /*
 	@author lihaiyang
 	在指定的列表中选择一个条目，可以使用不同的算法
