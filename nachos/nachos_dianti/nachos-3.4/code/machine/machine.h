@@ -25,7 +25,7 @@
 #include "utility.h"
 #include "translate.h"
 #include "disk.h"
-#include "List.h"
+#include "list.h"
 // Definitions related to the size, and format of user memory
 
 #define PageSize SectorSize // set the page size equal to
@@ -151,8 +151,10 @@ public:
 
 	TranslationEntry *translateTlb(int vpn, int offset, ExceptionType *exception);
 	TranslationEntry *translatePageTable(int vpn, int offset, ExceptionType *exception);
+	TranslationEntry* translatePageTableDes(int vpn, int offset, ExceptionType *exception );
 	ExceptionType replaceTlb(int virtAddr);		  //选取一个tlb替换掉
 	ExceptionType replacePageTable(int virtAddr); // 选取一个页表页替换掉
+	ExceptionType replacePageTableDes(int virtAddr, List* pageTable);
 	int findNullPyhPage();						  //反回一个可以使用的物理页面，如果没有，反回-1，否则反回物理页面编号
 
 	// Data structures -- all of these are accessible to Nachos kernel code.

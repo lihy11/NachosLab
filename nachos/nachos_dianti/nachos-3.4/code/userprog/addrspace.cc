@@ -110,15 +110,15 @@ AddrSpace::AddrSpace(OpenFile *executable)
         unsigned codeVirAddr = (unsigned) noffH.code.virtualAddr;
         unsigned int offset = codeVirAddr % PageSize;  //偏移
         unsigned int vpn = vpn = codeVirAddr / PageSize;  //第一个虚拟页号
-        int codePages = divRoundUp(noffH.code.size + offset, pageSize);    //总计需要的页面数量
+        int codePages = divRoundUp(noffH.code.size + offset, PageSize);    //总计需要的页面数量
         for(int i = 0; i < codePages; i ++){
 
-            char* diskPage = new char[pageSize];
+            char* diskPage = new char[PageSize];
             executable->ReadAt(diskPage + offset,
                             noffH.code.size, noffH.code.inFileAddr);
             pageTable[vpn+i].onDisk = true;
             pageTable[vpn+i].diskAddr = diskPage;
-            machine->disk-Append((void*)diskPage);  //加入虚拟磁盘
+            machine->disk->Append((void*)diskPage);  //加入虚拟磁盘
             offset = 0;     //只要第一个页面有偏移
         }
     }
@@ -130,15 +130,15 @@ AddrSpace::AddrSpace(OpenFile *executable)
         unsigned dataVirAddr = (unsigned) noffH.code.virtualAddr;
         unsigned int offset = dataVirAddr % PageSize;  //偏移
         unsigned int vpn = vpn = dataVirAddr / PageSize;  //第一个虚拟页号
-        int dataPages = divRoundUp(noffH.initData.size + offset, pageSize);    //总计需要的页面数量
+        int dataPages = divRoundUp(noffH.initData.size + offset, PageSize);    //总计需要的页面数量
         for(int i = 0; i < dataPages; i ++){
             if(pageTable[vpn+i].onDisk == FALSE){
-                char* diskPage = new char[pageSize];
+                char* diskPage = new char[PageSize];
                 executable->ReadAt(diskPage + offset,
                             noffH.initData.size, noffH.initData.inFileAddr);
                 pageTable[vpn+i].onDisk = true;
                 pageTable[vpn+i].diskAddr = diskPage;
-                machine->disk-Append((void*)diskPage);  //加入虚拟磁盘
+                machine->disk->Append((void*)diskPage);  //加入虚拟磁盘
             }else{
                 executable->ReadAt(pageTable[vpn+i].diskAddr + offset,
                             noffH.initData.size, noffH.initData.inFileAddr);
