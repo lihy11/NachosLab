@@ -101,7 +101,6 @@ AddrSpace::AddrSpace(OpenFile *executable)
     // and the stack segment
  //   bzero(machine->mainMemory, size);
 
-    // then, copy in the code and data segments into memory
     if (noffH.code.size > 0)
     {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n",
@@ -109,17 +108,18 @@ AddrSpace::AddrSpace(OpenFile *executable)
         /* 将其加载至虚拟磁盘 */
         unsigned codeVirAddr = (unsigned) noffH.code.virtualAddr;
         unsigned int offset = codeVirAddr % PageSize;  //偏移
-        unsigned int vpn = vpn = codeVirAddr / PageSize;  //第一个虚拟页号
+        unsigned int vpn = codeVirAddr / PageSize;  //第一个虚拟页号
         int codePages = divRoundUp(noffH.code.size + offset, PageSize);    //总计需要的页面数量
-        for(int i = 0; i < codePages; i ++){
+        int totalCodeSize = codePages * PageSize;    // 总计的代码所需页面大小
+        char* allDisk = new char[totalCodeSize];    //分配一个大块磁盘
+        executable->ReadAt(allDisk + offset,
+                           noffH.code.size, noffH.code.inFileAddr);   //读取所有代码到磁盘上
+        for(int i = 0; i < codePages; i ++){     //将磁盘分割为小块映射到内存页
 
-            char* diskPage = new char[PageSize];
-            executable->ReadAt(diskPage + offset,
-                            noffH.code.size, noffH.code.inFileAddr);
+            char* diskPage = allDisk + PageSize * i;
             pageTable[vpn+i].onDisk = true;
             pageTable[vpn+i].diskAddr = diskPage;
-            machine->disk->Append((void*)diskPage);  //加入虚拟磁盘
-            offset = 0;     //只要第一个页面有偏移
+            machine->disk->Append((void*)diskPage);  //加入虚拟磁
         }
     }
     if (noffH.initData.size > 0)
@@ -129,21 +129,26 @@ AddrSpace::AddrSpace(OpenFile *executable)
               /* 将其加载至虚拟磁盘 */
         unsigned dataVirAddr = (unsigned) noffH.code.virtualAddr;
         unsigned int offset = dataVirAddr % PageSize;  //偏移
-        unsigned int vpn = vpn = dataVirAddr / PageSize;  //第一个虚拟页号
+        unsigned int vpn = dataVirAddr / PageSize;  //第一个虚拟页号
         int dataPages = divRoundUp(noffH.initData.size + offset, PageSize);    //总计需要的页面数量
-        for(int i = 0; i < dataPages; i ++){
+        int totalDataSize = dataPages * PageSize;
+        char* allDisk = new char[totalDataSize];    //分配一个大块磁盘
+        executable->ReadAt(allDisk + offset,
+                           noffH.initData.size, noffH.initData.inFileAddr);   //读取所有数据到磁盘上
+        for(int i = 0; i < dataPages; i ++){   //  分割磁盘块
+            char* diskPage = allDisk + PageSize * i;
             if(pageTable[vpn+i].onDisk == FALSE){
-                char* diskPage = new char[PageSize];
-                executable->ReadAt(diskPage + offset,
-                            noffH.initData.size, noffH.initData.inFileAddr);
                 pageTable[vpn+i].onDisk = true;
                 pageTable[vpn+i].diskAddr = diskPage;
                 machine->disk->Append((void*)diskPage);  //加入虚拟磁盘
-            }else{
-                executable->ReadAt(pageTable[vpn+i].diskAddr + offset,
-                            noffH.initData.size, noffH.initData.inFileAddr);
+            }else{    //拷贝到原来已经分配好的磁盘块
+                for(int j = 0; j < PageSize; j ++){
+                    if(diskPage[j] != 0){
+                        ((char*)(pageTable[vpn + i].diskAddr))[j] = diskPage[j];
+                    }
+                }
             }
-            offset = 0;    //只有第一个页面有偏移
+
         }
     }
 }

@@ -394,14 +394,7 @@ Machine::replacePageTable(int virtAddr)
 	int *pageFromDisk = NULL;
 	if (pageTable[vpn].onDisk)
 	{ //页面在磁盘，从磁盘重新读取页面到pageFromDisk
-		for (ListElement *page = disk->getHead(); page != NULL; page = page->next)
-		{
-			if ((int)page == pageTable[vpn].diskAddr)
-			{
-				pageFromDisk = (int *)page;
-				break;
-			}
-		}
+		pageFromDisk = (int*)pageTable[vpn].diskAddr;
 	}
 	//分配一个物理页面，并更新页表
 	int pageNO = findNullPyhPage();
