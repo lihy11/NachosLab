@@ -43,7 +43,16 @@ void StartProcess(char *filename)
                     // the address space exits
                     // by doing the syscall "exit"
 }
+/*
+ * test vm
+ * */
+void testProg(){
+	char* filename1 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/sort";
+	char* filename2 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/matmult";
 
+	Thread* thread1 = new Thread("sort");
+	threa1->Fork();
+}
 // Data structures needed for the console test.  Threads making
 // I/O requests wait on a Semaphore to delay until the I/O completes.
 
