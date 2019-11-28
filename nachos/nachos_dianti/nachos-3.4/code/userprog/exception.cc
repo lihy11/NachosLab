@@ -60,6 +60,10 @@ void ExceptionHandler(ExceptionType which)
     {
         DEBUG('a', "Shutdown, initiated by user program.\n");
         interrupt->Halt();
+    }else if((which == SyscallException) && (type == SC_Exit)){
+    	DEBUG('a', "Exit, exit the user prog.\n");
+    	printf("Exit code is %d\n", machine->ReadRegister(4));
+    	currentThread->Finish();
     }
     else if (which == PageFaultException)
     {

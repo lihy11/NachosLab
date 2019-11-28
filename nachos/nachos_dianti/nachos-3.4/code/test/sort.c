@@ -21,12 +21,14 @@ main()
         A[i] = 1024 - i;
 
     /* then sort! */
-    for (i = 0; i < size-1; i++)
-        for (j = i; j < (size-1 - i); j++)
-	   if (A[j] > A[j + 1]) {	/* out of order -> need to swap ! */
-	      tmp = A[j];
-	      A[j] = A[j + 1];
-	      A[j + 1] = tmp;
-    	   }
+    for(i = 0; i < size - 1; i ++){
+    	for(j = size - 1; j > i; j --){
+    		if(A[j] > A[j-1]){
+    			tmp = A[j];
+    			A[j] = A[j-1];
+    			A[j-1] = tmp;
+    		}
+    	}
+    }
     Exit(A[0]);		/* and then we're done -- should be 0! */
 }

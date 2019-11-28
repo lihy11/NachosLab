@@ -51,7 +51,7 @@ void testProg(){
 	char* filename2 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/matmult";
 
 	Thread* thread1 = new Thread("sort");
-	threa1->Fork(StartProcess, filename1);
+	thread1->Fork(StartProcess, filename1);
     Thread* thread2 = new Thread("matmult");
     thread2->Fork(StartProcess, filename2);
 }
