@@ -64,6 +64,7 @@ extern void Print(char *file), PerformanceTest(void);
 extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
 extern void printHello();
+extern void testProg();
 //----------------------------------------------------------------------
 // main
 // 	Bootstrap the operating system kernel.
@@ -112,6 +113,7 @@ int main(int argc, char **argv)
 		if (!strcmp(*argv, "-z")) // print copyright
 			printf(copyright);
 #ifdef USER_PROGRAM
+		testProg();
 		if (!strcmp(*argv, "-x"))
 		{ // run a user program
 			ASSERT(argc > 1);
