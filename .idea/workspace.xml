@@ -9,7 +9,50 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="60af5b5a-0d70-44bd-9932-c2d6b81e34c2" name="Default Changelist" comment="" />
+    <list default="true" id="60af5b5a-0d70-44bd-9932-c2d6b81e34c2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/addrspace.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/addrspace.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/exception.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/exception.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/nachos" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/nachos" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/progtest.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/progtest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/swtch.s" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/filesys/swtch.s" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/addrspace.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/addrspace.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/exception.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/exception.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/nachos" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/nachos" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/progtest.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/progtest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/swtch.s" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/network/swtch.s" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/halt" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/halt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/matmult" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/matmult" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/shell" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/shell" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.c" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.coff" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.coff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/test/sort.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/main.cc" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/main.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/nachos" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/threads/nachos" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/addrspace.cc" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/addrspace.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/addrspace.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/addrspace.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/exception.cc" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/exception.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/exception.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/exception.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/nachos" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/nachos" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/progtest.cc" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/progtest.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/progtest.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/userprog/progtest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/addrspace.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/addrspace.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/exception.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/exception.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/nachos" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/nachos" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/progtest.o" beforeDir="false" afterPath="$PROJECT_DIR$/nachos/nachos_dianti/nachos-3.4/code/vm/progtest.o" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +65,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectId" id="1UBnWRcUmQD1BxcqluduUfOrDKm" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="settings.editor.selected.configurable" value="web.server" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -49,6 +94,8 @@
       <option name="presentableId" value="Default" />
       <updated>1574838886809</updated>
       <workItem from="1574838892228" duration="9000" />
+      <workItem from="1574932702959" duration="1459000" />
+      <workItem from="1574949406470" duration="891000" />
     </task>
     <servers />
   </component>
@@ -60,7 +107,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

@@ -127,7 +127,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n",
               noffH.initData.virtualAddr, noffH.initData.size);
               /* 将其加载至虚拟磁盘 */
-        unsigned dataVirAddr = (unsigned) noffH.code.virtualAddr;
+        unsigned dataVirAddr = (unsigned) noffH.initData.virtualAddr;
         unsigned int offset = dataVirAddr % PageSize;  //偏移
         unsigned int vpn = dataVirAddr / PageSize;  //第一个虚拟页号
         int dataPages = divRoundUp(noffH.initData.size + offset, PageSize);    //总计需要的页面数量
