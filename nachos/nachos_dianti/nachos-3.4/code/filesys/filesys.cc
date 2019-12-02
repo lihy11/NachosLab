@@ -320,7 +320,7 @@ void FileSystem::Print()
     FileHeader *bitHdr = new FileHeader;
     FileHeader *dirHdr = new FileHeader;
     BitMap *freeMap = new BitMap(NumSectors);
-    Directory *directory = new Directory(NumDirEntries);
+    Directory *directory = new Directory();
 
     printf("Bit map file header:\n");
     bitHdr->FetchFrom(FreeMapSector);
