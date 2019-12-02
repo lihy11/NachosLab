@@ -18,7 +18,7 @@
 #define DIRECTORY_H
 
 #include "openfile.h"
-
+#include "list.h"
 #define FileNameMaxLen 9 // for simplicity, we assume
                          // file names are <= 9 characters long
 
@@ -28,11 +28,22 @@
 //
 // Internal data structures kept public so that Directory operations can
 // access them directly.
-
-class DirectoryEntry
+/*
+ 目录项
+ 1. 标识当前目录项是一个文件还是目录文件
+ 2. 标识名称，或者长名称存储在一个磁盘块，给出磁盘块号
+ 3. 标识文件头的磁盘块号。
+*/
+class DirectoryEntry    
 {
 public:
-    bool inUse;                    // Is this directory entry in use?
+
+    bool isDirectory;   // 是否是目录
+    bool nameOnDisk;     // 名称是否在磁盘块
+    int nameDiskSector;   //名称在磁盘块的位置
+    long createDate;    // 标准时间,  创建时间
+    long lastChangeDate;   //标准时间， 上次修改
+
     int sector;                    // Location on disk to find the
                                    //   FileHeader for this file
     char name[FileNameMaxLen + 1]; // Text name for file, with +1 for
@@ -52,8 +63,7 @@ public:
 class Directory
 {
 public:
-    Directory(int size); // Initialize an empty directory
-                         // with space for "size" files
+    Directory();
     ~Directory();        // De-allocate the directory
 
     void FetchFrom(OpenFile *file); // Init directory contents from disk
@@ -75,7 +85,7 @@ public:
 
 private:
     int tableSize;         // Number of directory entries
-    DirectoryEntry *table; // Table of pairs:
+    DirectoryEntry* table;           // Table of pairs:
                            // <file name, file header location>
 
     int FindIndex(char *name); // Find the index into the directory

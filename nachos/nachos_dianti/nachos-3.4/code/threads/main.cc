@@ -65,7 +65,7 @@ extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
 extern void printHello();
 extern void testProg();
-
+extern void testFileSystem();
 //----------------------------------------------------------------------
 // main
 // 	Bootstrap the operating system kernel.
@@ -80,24 +80,27 @@ extern void testProg();
 //		ex: "nachos -d +" -> argv = {"nachos", "-d", "+"}
 //----------------------------------------------------------------------
 
-int main(int argc, char **argv){
-    printHello();
-    int argCount; // the number of arguments
-    // for a particular command
+int main(int argc, char **argv)
+{
+	printHello();
+	int argCount; // the number of arguments
+	// for a particular command
 
-    DEBUG('t', "Entering main");
-    (void)Initialize(argc, argv);
+	DEBUG('t', "Entering main");
+	(void)Initialize(argc, argv);
 
 #ifdef THREADS
 	ThreadTest();
 #endif
 
 #ifdef USER_PROGRAM
-        testProg();
+	testProg();
 #endif // USER_PROGRAM
-
-    currentThread->Finish(); //
-    return (0); // Not reached...
+#ifdef FILESYS
+	testFileSystem();
+#endif						 // FILESYS
+	currentThread->Finish(); //
+	return (0);				 // Not reached...
 }
 
 //int main(int argc, char **argv)
