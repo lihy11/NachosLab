@@ -89,13 +89,13 @@ int main(int argc, char **argv)
 	DEBUG('t', "Entering main");
 	(void)Initialize(argc, argv);
 
-#ifdef THREADS
-	ThreadTest();
-#endif
-
-#ifdef USER_PROGRAM
-	testProg();
-#endif // USER_PROGRAM
+//#ifdef THREADS
+//	ThreadTest();
+//#endif
+//
+//#ifdef USER_PROGRAM
+//	testProg();
+//#endif // USER_PROGRAM
 #ifdef FILESYS
 	testFileSystem();
 #endif						 // FILESYS

@@ -1138,7 +1138,49 @@ directory.o: ../filesys/directory.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../filesys/filehdr.h ../machine/disk.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../filesys/directory.h \
- ../filesys/openfile.h
+ ../filesys/openfile.h ../threads/list.h ../threads/utility.h \
+ ../threads/system.h ../threads/thread.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../threads/scheduler.h ../threads/list.h \
+ /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/cpu_defines.h \
+ /usr/include/c++/5/bits/functexcept.h \
+ /usr/include/c++/5/bits/exception_defines.h \
+ /usr/include/c++/5/bits/cpp_type_traits.h \
+ /usr/include/c++/5/ext/type_traits.h \
+ /usr/include/c++/5/ext/numeric_traits.h \
+ /usr/include/c++/5/bits/stl_pair.h /usr/include/c++/5/bits/move.h \
+ /usr/include/c++/5/bits/concept_check.h \
+ /usr/include/c++/5/bits/stl_iterator_base_types.h \
+ /usr/include/c++/5/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/5/debug/debug.h /usr/include/c++/5/bits/stl_iterator.h \
+ /usr/include/c++/5/bits/ptr_traits.h \
+ /usr/include/c++/5/bits/predefined_ops.h \
+ /usr/include/c++/5/bits/allocator.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/c++allocator.h \
+ /usr/include/c++/5/ext/new_allocator.h /usr/include/c++/5/new \
+ /usr/include/c++/5/exception \
+ /usr/include/c++/5/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/5/bits/memoryfwd.h \
+ /usr/include/c++/5/bits/stl_construct.h \
+ /usr/include/c++/5/ext/alloc_traits.h \
+ /usr/include/c++/5/bits/stl_uninitialized.h \
+ /usr/include/c++/5/bits/stl_vector.h \
+ /usr/include/c++/5/bits/stl_bvector.h \
+ /usr/include/c++/5/bits/range_access.h \
+ /usr/include/c++/5/bits/vector.tcc /usr/include/c++/5/queue \
+ /usr/include/c++/5/deque /usr/include/c++/5/bits/stl_deque.h \
+ /usr/include/c++/5/bits/deque.tcc /usr/include/c++/5/bits/stl_heap.h \
+ /usr/include/c++/5/bits/stl_function.h \
+ /usr/include/c++/5/backward/binders.h \
+ /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
+ ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
+ ../threads/synch.h ../network/post.h ../machine/network.h \
+ ../threads/synchlist.h ../threads/synch.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/bits/timex.h
 filehdr.o: ../filesys/filehdr.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -1210,8 +1252,8 @@ filesys.o: ../filesys/filesys.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../filesys/directory.h ../filesys/openfile.h ../filesys/filehdr.h \
- ../filesys/filesys.h
+ ../filesys/directory.h ../filesys/openfile.h ../threads/list.h \
+ ../threads/utility.h ../filesys/filehdr.h ../filesys/filesys.h
 fstest.o: ../filesys/fstest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../threads/bool.h ../machine/sysdep.h /usr/include/stdio.h \

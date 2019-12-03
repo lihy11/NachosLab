@@ -27,6 +27,14 @@
 #include "system.h"
 #include "filehdr.h"
 
+FileHeader::FileHeader(){
+	numBytes = 0;
+	numSectors = 0;
+	for(int i = 0; i < NumIndex; i ++){
+		dataSectors[i] = 0;
+	}
+}
+
 //----------------------------------------------------------------------
 // FileHeader::Allocate
 // 	Initialize a fresh file header for a newly created file.
@@ -59,8 +67,9 @@ bool FileHeader::Allocate(BitMap *freeMap, int fileSize)
         for(int i = 0; i < numSectors - NumDirectIndex; i ++){
             buf[i] = freeMap->Find();
         }
+        synchDisk->WriteSector(dataSectors[NumDirectIndex], (char *)buf);
     }else {
-
+    	return FALSE;
     }
     
     return TRUE;
@@ -122,7 +131,7 @@ void FileHeader::WriteBack(int sector)
 int FileHeader::ByteToSector(int offset, FileSystem* filesys)
 {
     int index = offset / SectorSize;
-    if(index > numSectors){    // 长度变化，写操作会发生
+    if(index >= numSectors){    // 长度变化，写操作会发生
         numSectors ++;
         int secNum = filesys->findEmptySector();
         if(secNum == -1){
@@ -196,4 +205,16 @@ void FileHeader::Print()
         printf("\n");
     }
     delete[] data;
+}
+
+bool FileHeader::initDir(FileSystem* fileSystem) {
+	numSectors = 1;
+	numBytes = 4;
+    int sec = fileSystem->findEmptySector();
+    if(sec == -1)
+        return FALSE;
+    dataSectors[0] = sec;
+    char buf[SectorSize] = {};
+    synchDisk->WriteSector(sec, buf);
+    return TRUE;
 }

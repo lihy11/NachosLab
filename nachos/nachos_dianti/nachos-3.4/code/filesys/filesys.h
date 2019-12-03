@@ -69,6 +69,7 @@ public:
 };
 
 #else // FILESYS
+class Directory;
 class FileSystem
 {
 public:
@@ -79,7 +80,7 @@ public:
 							 // the disk, so initialize the directory
 							 // and the bitmap of free blocks.
 
-	bool Create(char *name, int initialSize);
+	bool Create(char *name, int initialSize, bool isFile);
 	// Create a file (UNIX creat)
 
 	OpenFile *Open(char *name); // Open a file (UNIX open)
@@ -91,12 +92,11 @@ public:
 	void Print(); // List all the files and their contents
 
 	int findEmptySector();   // 返回一个可用的磁盘块号
-	Directory* findFatherDirectory(char* name, Directory* pwd);   // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
-	bool mkdir(char* name);
+	int findFatherDirectory(char* name, int pwdSec);   // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
 private:
 	OpenFile *freeMapFile;   // Bit map of free disk blocks,
 							 // represented as a file
-	OpenFile *directoryFile; // "Root" directory -- list of
+	OpenFile *rootDirectoryFile; // "Root" directory -- list of
 							 // file names, represented as a file
 };
 

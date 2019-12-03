@@ -40,12 +40,14 @@
 // by allocating blocks for the file (if it is a new file), or by
 // reading it from disk.
 class FileSystem;
+
 class FileHeader
 {
 public:
+	FileHeader();
     bool Allocate(BitMap *bitMap, int fileSize); // Initialize a file header,
                                                  //  including allocating space
-                                                 //  on disk for the file data
+                                                 //  on disk for the file disk
     void Deallocate(BitMap *bitMap);             // De-allocate this file's
                                                  //  data blocks
 
@@ -61,12 +63,14 @@ public:
                       // in bytes
 
     void Print(); // Print the contents of the file.
-    void setFileLength(int len){this->numBytes = len};
+    void setFileLength(int len){this->numBytes = len;};
+    bool initDir(FileSystem* fileSystem);   // 初始化为一个目录文件，需要分配一个磁盘块
 private:
     int numBytes;              // Number of bytes in the file
     int numSectors;            // Number of data sectors in the file
     int dataSectors[NumIndex]; // Disk sector numbers for each data
                                // block in the file
+friend class Directory;
 };
 
 #endif // FILEHDR_H

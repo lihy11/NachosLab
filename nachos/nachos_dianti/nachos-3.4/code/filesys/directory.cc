@@ -24,6 +24,7 @@
 #include "utility.h"
 #include "filehdr.h"
 #include "directory.h"
+#include "system.h"
 #include <time.h>
 //----------------------------------------------------------------------
 // Directory::Directory
@@ -44,7 +45,14 @@ Directory::Directory()
     tableSize = 0;
     table = NULL;
 }
-
+/*
+ *
+ * */
+Directory::Directory(int sec) {
+    OpenFile* openFile = new OpenFile(sec);
+    FetchFrom(openFile);
+    delete openFile;
+}
 //----------------------------------------------------------------------
 // Directory::~Directory
 // 	De-allocate directory data structure.
@@ -67,7 +75,7 @@ Directory::~Directory()
 
 void Directory::FetchFrom(OpenFile *file)
 {
-    (void)file->ReadAt(&tableSize, 4, 0); //读取entry数量
+    (void)file->ReadAt((char*)(&tableSize), 4, 0); //读取entry数量
 
     int fileSize = tableSize * sizeof(DirectoryEntry); // 获取entry 总字节数
     (void)file->ReadAt((char *)table, fileSize, 4);
@@ -82,7 +90,7 @@ void Directory::FetchFrom(OpenFile *file)
 
 void Directory::WriteBack(OpenFile *file)
 {
-    (void)file->WriteAt(&tableSize, 4, 0); //写入entry数量
+    (void)file->WriteAt((char*)(&tableSize), 4, 0); //写入entry数量
 
     (void)file->WriteAt((char *)table, tableSize * sizeof(DirectoryEntry), 4);
 }
@@ -132,15 +140,16 @@ int Directory::Find(char *name)
 //	"newSector" -- the disk sector containing the added file's header
 //----------------------------------------------------------------------
 
-bool Directory::Add(char *name, int newSector, FileSystem* filesys, bool isFile)
+bool Directory::Add(char *name, int newSector, FileSystem* filesys, bool isFile, FileHeader* myHeader)
 {
     if (FindIndex(name) != -1)
         return FALSE;
 
     /*  分配新的比原来大一个entry 的 table， 删除原来的*/
     tableSize++;
+    myHeader->numBytes += sizeof(DirectoryEntry);
     DirectoryEntry *newTable = new DirectoryEntry[tableSize];
-    strncpy(newTable, table, sizeof(DirectoryEntry) * (tableSize - 1));
+    strncpy((char*)newTable, (char*)table, sizeof(DirectoryEntry) * (tableSize - 1));
     delete table;
     table = newTable;
     /*  拷贝名字*/
@@ -152,7 +161,7 @@ bool Directory::Add(char *name, int newSector, FileSystem* filesys, bool isFile)
     }
     else
     {
-        strncpy(table[i].name, name, FileNameMaxLen);
+        strncpy(table[tableSize - 1].name, name, FileNameMaxLen);
     }
     time_t create;
     time(&create);
@@ -184,8 +193,8 @@ bool Directory::Remove(char *name)
     DirectoryEntry* buf = new DirectoryEntry[tableSize];
     int firstPartSize = i * sizeof(DirectoryEntry);
     int secondPartSize = (tableSize - i) * sizeof(DirectoryEntry);
-    strncpy(buf, table, firstPartSize);
-    strncpy(buf + firstPartSize, table + firstPartSize + sizeof(DirectoryEntry), secondPartSize);
+    strncpy((char*)buf, (char*)table, firstPartSize);
+    strncpy((char*)(buf + firstPartSize), (char*)(table + firstPartSize + sizeof(DirectoryEntry)), secondPartSize);
     delete table;
     table = buf;
     return TRUE;

@@ -37,7 +37,14 @@
 class DirectoryEntry    
 {
 public:
-
+	DirectoryEntry(){
+		isDirectory = false;
+		nameOnDisk = false;
+		nameDiskSector = -1;
+		createDate = 0;
+		lastChangeDate = 0;
+		sector = 0;
+	};
     bool isDirectory;   // 是否是目录
     bool nameOnDisk;     // 名称是否在磁盘块
     int nameDiskSector;   //名称在磁盘块的位置
@@ -46,7 +53,7 @@ public:
 
     int sector;                    // Location on disk to find the
                                    //   FileHeader for this file
-    char name[FileNameMaxLen + 1]; // Text name for file, with +1 for
+    char name[FileNameMaxLen + 1] = {}; // Text name for file, with +1 for
                                    // the trailing '\0'
 };
 
@@ -59,11 +66,13 @@ public:
 // The constructor initializes a directory structure in memory; the
 // FetchFrom/WriteBack operations shuffle the directory information
 // from/to disk.
-
+class FileSystem;
+class FileHeader;
 class Directory
 {
 public:
     Directory();
+    Directory(int sec);
     ~Directory();        // De-allocate the directory
 
     void FetchFrom(OpenFile *file); // Init directory contents from disk
@@ -73,7 +82,7 @@ public:
     int Find(char *name); // Find the sector number of the
                           // FileHeader for file: "name"
 
-    bool Add(char *name, int newSector); // Add a file name into the directory
+    bool Add(char *name, int newSector, FileSystem* filesys, bool isFile, FileHeader* myHeader); // Add a file name into the directory
 
     bool Remove(char *name); // Remove a file from the directory
 
