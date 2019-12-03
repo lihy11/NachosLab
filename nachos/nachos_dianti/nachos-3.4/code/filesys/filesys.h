@@ -93,6 +93,7 @@ public:
 
 	int findEmptySector();   // 返回一个可用的磁盘块号
 	int findFatherDirectory(char* name, int pwdSec);   // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
+	char* getFileName(char* abName);
 private:
 	OpenFile *freeMapFile;   // Bit map of free disk blocks,
 							 // represented as a file

@@ -78,6 +78,7 @@ void Directory::FetchFrom(OpenFile *file)
     (void)file->ReadAt((char*)(&tableSize), 4, 0); //读取entry数量
 
     int fileSize = tableSize * sizeof(DirectoryEntry); // 获取entry 总字节数
+    table = new DirectoryEntry[tableSize];
     (void)file->ReadAt((char *)table, fileSize, 4);
 }
 
@@ -106,7 +107,7 @@ void Directory::WriteBack(OpenFile *file)
 int Directory::FindIndex(char *name)
 {
     for (int i = 0; i < tableSize; i++)
-        if (!strncmp(table[i].name, name, FileNameMaxLen))
+        if (!strcmp(table[i].name, name))
             return i;
     return -1; // name not in directory
 }
@@ -149,7 +150,7 @@ bool Directory::Add(char *name, int newSector, FileSystem* filesys, bool isFile,
     tableSize++;
     myHeader->numBytes += sizeof(DirectoryEntry);
     DirectoryEntry *newTable = new DirectoryEntry[tableSize];
-    strncpy((char*)newTable, (char*)table, sizeof(DirectoryEntry) * (tableSize - 1));
+    memcpy((char*)newTable, (char*)table, sizeof(DirectoryEntry) * (tableSize - 1));
     delete table;
     table = newTable;
     /*  拷贝名字*/
@@ -193,8 +194,8 @@ bool Directory::Remove(char *name)
     DirectoryEntry* buf = new DirectoryEntry[tableSize];
     int firstPartSize = i * sizeof(DirectoryEntry);
     int secondPartSize = (tableSize - i) * sizeof(DirectoryEntry);
-    strncpy((char*)buf, (char*)table, firstPartSize);
-    strncpy((char*)(buf + firstPartSize), (char*)(table + firstPartSize + sizeof(DirectoryEntry)), secondPartSize);
+    memcpy((char*)buf, (char*)table, firstPartSize);
+    memcpy((char*)(buf + firstPartSize), (char*)(table + firstPartSize + sizeof(DirectoryEntry)), secondPartSize);
     delete table;
     table = buf;
     return TRUE;

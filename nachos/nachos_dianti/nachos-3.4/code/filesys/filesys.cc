@@ -177,7 +177,7 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
         if (sector == -1)
             success = FALSE; // no free block for file header
         else {
-            fatherDir->Add(name, sector, this, isFile, fatherHdr);
+            fatherDir->Add(getFileName(name), sector, this, isFile, fatherHdr);
             FileHeader* hdr = new FileHeader;
             if(isFile == FALSE)
                 hdr->initDir(this);
@@ -335,9 +335,9 @@ int FileSystem::findFatherDirectory(char* name, int pwdSec) {
 		len++;
 		tmp++;
 	}
-	char* fileName = new char[len];
-	strncpy(fileName, name, len);
-
+	char* fileName = new char[len+1];
+	memcpy(fileName, name, len);
+	fileName[len] = '\0';
 	if (tmp == NULL || *tmp == '\0') {  // 文件
         return pwdSec;
 	} else {       // 文件夹
@@ -347,5 +347,20 @@ int FileSystem::findFatherDirectory(char* name, int pwdSec) {
             return -1;
 		return findFatherDirectory(tmp, childSec);
 	}
+}
+
+char* FileSystem::getFileName(char* abName){
+	int lastSep = -1;
+	int i = 0;
+	char* tmp = abName;
+	for(int j = strlen(abName)-1; j >= 0; j --){
+		if(abName[j] == '/'){
+			lastSep = j;
+			break;
+		}
+	}
+	if(lastSep == -1)
+		return abName;
+	return abName + lastSep + 1;
 }
 
