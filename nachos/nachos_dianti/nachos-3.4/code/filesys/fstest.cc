@@ -198,6 +198,5 @@ void testFileSystem()
    fileSystem->Create("/home/li", 0, FALSE);
    Copy("/home/lihaiyang/test", "/home/li/test");
    fileSystem->Print();
-   FileWrite();
-   FileRead();
+
 }

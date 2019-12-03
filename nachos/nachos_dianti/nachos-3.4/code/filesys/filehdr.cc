@@ -71,7 +71,7 @@ bool FileHeader::Allocate(BitMap *freeMap, int fileSize)
     }else {
     	return FALSE;
     }
-    
+
     return TRUE;
 }
 
@@ -164,7 +164,7 @@ int FileHeader::ByteToSector(int offset, FileSystem* filesys)
             return buf[index - NumDirectIndex];
         }
     }
-    
+
 }
 
 //----------------------------------------------------------------------
@@ -207,7 +207,7 @@ void FileHeader::Print()
     delete[] data;
 }
 
-bool FileHeader::initDir(FileSystem* fileSystem) {
+bool FileHeader::init(FileSystem* fileSystem) {
 	numSectors = 1;
 	numBytes = 4;
     int sec = fileSystem->findEmptySector();

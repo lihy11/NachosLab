@@ -102,7 +102,7 @@ FileSystem::FileSystem(bool format) {
 		/*  创建根目录 */
 		Directory *root = new Directory();
 		FileHeader *rootDirHdr = new FileHeader;
-		ASSERT(rootDirHdr->initDir(this));
+		ASSERT(rootDirHdr->init(this));
 
 		/*  将根目录文件头写回指定位置 */
 		rootDirHdr->WriteBack(RootDirectorySector);
@@ -179,8 +179,7 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
         else {
             fatherDir->Add(getFileName(name), sector, this, isFile, fatherHdr);
             FileHeader* hdr = new FileHeader;
-            if(isFile == FALSE)
-                hdr->initDir(this);
+            hdr->init(this);
             hdr->WriteBack(sector);
             fatherHdr->WriteBack(fatherSec);
             fatherDir->WriteBack(fatherFile);
@@ -208,7 +207,7 @@ FileSystem::Open(char *name) {
 	OpenFile *openFile = NULL;
 	int sector;
 	DEBUG('f', "Opening file %s\n", name);
-	sector = directory->Find(name);
+	sector = directory->Find(getFileName(name));
 	if (sector >= 0)
 		openFile = new OpenFile(sector); // name was found in directory
 	delete directory;

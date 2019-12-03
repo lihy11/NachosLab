@@ -64,7 +64,7 @@ public:
 
     void Print(); // Print the contents of the file.
     void setFileLength(int len){this->numBytes = len;};
-    bool initDir(FileSystem* fileSystem);   // 初始化为一个目录文件，需要分配一个磁盘块
+    bool init(FileSystem* fileSystem);   // 初始化为一个目录文件，需要分配一个磁盘块
 private:
     int numBytes;              // Number of bytes in the file
     int numSectors;            // Number of data sectors in the file
