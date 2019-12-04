@@ -111,7 +111,12 @@ int Directory::FindIndex(char *name)
             return i;
     return -1; // name not in directory
 }
-
+int Directory::FindIndex(int sec){
+    for (int i = 0; i < tableSize; i++)
+        if (table[i].sector == sec))
+            return i;
+    return -1; // name not in directory
+}
 //----------------------------------------------------------------------
 // Directory::Find
 // 	Look up file name in directory, and return the disk sector number
@@ -200,7 +205,21 @@ bool Directory::Remove(char *name)
     table = buf;
     return TRUE;
 }
+bool Directory::Remove(int sec){
+    int i = FindIndex(sec);
 
+    if (i == -1)
+        return FALSE; // name not in directory
+    tableSize --;
+    DirectoryEntry* buf = new DirectoryEntry[tableSize];
+    int firstPartSize = i * sizeof(DirectoryEntry);
+    int secondPartSize = (tableSize - i) * sizeof(DirectoryEntry);
+    memcpy((char*)buf, (char*)table, firstPartSize);
+    memcpy((char*)(buf + firstPartSize), (char*)(table + firstPartSize + sizeof(DirectoryEntry)), secondPartSize);
+    delete table;
+    table = buf;
+    return TRUE;
+}
 //----------------------------------------------------------------------
 // Directory::List
 // 	List all the file names in the directory.

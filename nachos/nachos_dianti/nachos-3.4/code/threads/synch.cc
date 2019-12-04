@@ -181,53 +181,50 @@ void Condition::Broadcast(Lock *conditionLock)
 /*
     读者写者问题：基于锁机制
 */
-class ReadWriteLock{
-    Lock* writeLock;   //控制写操作
-    Lock* readerNumLock;  //控制读者数量
-    int readerNum;   //读者数量
-
-    /*  读者在读取数据时需要检查是否有写者在写，表现为可写的锁busy ,
-        第一个读者检查可写锁，其余读者则检查读者数量
-    */
-   ReadWriteLock(){
-       writeLock = new Lock("write lock");
-       readerNumLock = new Lock("reader num lock");
-       readerNum = 0;
-   }
-   void read();
-   void write();
-    void reader(){
-        readerNumLock->Acquire();
-        readerNum ++;  //增加读者数量
-        if(readerNum == 1){   //第一个读者，锁住写操作
-            writeLock->Acquire();
-        }
-        readerNumLock->Release();  
-
-        read();   //读取数据
-
-        readerNumLock->Acquire();
-        readerNum --;
-        if(readerNum == 0){   // 这是最后一个读者
-            writeLock->Release();
-        }
-        readerNumLock->Release();
-    };
-    void writer(){
+ReadWriteLock::ReadWriteLock()
+{
+    writeLock = new Lock("write lock");
+    readerNumLock = new Lock("reader num lock");
+    readerNum = 0;
+}
+void ReadWriteLock::reader(VoidFunctionPtr func, char *into, int numBytes)
+{
+    readerNumLock->Acquire();
+    readerNum++; //增加读者数量
+    if (readerNum == 1)
+    { //第一个读者，锁住写操作
         writeLock->Acquire();
-        write();
+    }
+    readerNumLock->Release();
+
+    func(into, numBytes); //读取数据
+
+    readerNumLock->Acquire();
+    readerNum--;
+    if (readerNum == 0)
+    { // 这是最后一个读者
         writeLock->Release();
-    };
-};
+    }
+    readerNumLock->Release();
+}
+void ReadWriteLock::writer(VoidFunctionPtr func, char *from, int numBytes)
+{
+    writeLock->Acquire();
+    func(into, numBytes); //读取数据
+    writeLock->Release();
+}
+
+
 /*  读者写者问题，基于条件变量机制  */
-class ReadWriteCondition{
+class ReadWriteCondition
+{
     int AR; //在读者数量
     int WR; //等待读者数量
     int AW; //写者数量
     int WW; //等待读者数量
-    Lock* lock;
-    Condition* toRead;   //读者等待队列
-    Condition* toWrite;  //写者等待队列
+    Lock *lock;
+    Condition *toRead;  //读者等待队列
+    Condition *toWrite; //写者等待队列
 
     void read();
     void write();
@@ -235,71 +232,83 @@ class ReadWriteCondition{
         读者检查是否有读者在读，如果有人在读，则直接读，如果没人读，则检查是否有人写，
         如果有人写，则在读者队列休眠,否则作为第一个读者给写锁
     */
-    void reader(){
-       lock->Acquire();
-       while(AW + WW > 0){  //有读者在写或者在等
-            WR ++;
-            toRead->Wait(lock);   //等待
-            WR --;
-       }
-       AR ++;  //读者数量增加
-       lock->Release();
+    void reader()
+    {
+        lock->Acquire();
+        while (AW + WW > 0)
+        { //有读者在写或者在等
+            WR++;
+            toRead->Wait(lock); //等待
+            WR--;
+        }
+        AR++; //读者数量增加
+        lock->Release();
 
-       read();
+        read();
 
-       lock->Acquire();
-       AR --;
-       if(AR == 0 && WW > 0){
-           toWrite->Signal(lock);
-       }
+        lock->Acquire();
+        AR--;
+        if (AR == 0 && WW > 0)
+        {
+            toWrite->Signal(lock);
+        }
         lock->Release();
     };
     /*
         如果有人在写或者有人在读，都需要休眠，否则则可以写，写完成后选择唤醒写进程或者读进程
     */
-    void writer(){
+    void writer()
+    {
         lock->Acquire();
-        while(AR + AW > 0){
-            WW ++;
+        while (AR + AW > 0)
+        {
+            WW++;
             toWrite->Wait(lock);
-            WW --;
+            WW--;
         }
-        AW ++;
+        AW++;
         lock->Release();
 
         write();
 
         lock->Acquire();
-        AW --;
-        if(WW > 0){
+        AW--;
+        if (WW > 0)
+        {
             toWrite->Signal(lock);
-        }else if(WR > 0){
+        }
+        else if (WR > 0)
+        {
             toRead->Signal(lock);
         }
         lock->Release();
-    }; 
+    };
 };
 /*  进程同步，多个进程同时到达指定位置可以继续执行  */
-class Barrier{
-    Lock* lock;
-    int waitingNum;  // 已有几个线程到达指定位置
-    int runNum;  //需要几个线程到达指定位置
-    Condition* toRun;
+class Barrier
+{
+    Lock *lock;
+    int waitingNum; // 已有几个线程到达指定位置
+    int runNum;     //需要几个线程到达指定位置
+    Condition *toRun;
 
-    void run(){
+    void run()
+    {
         /*
         ... 执行各个进程相关操作，到达指定位置
         */
         lock->Acquire();
-        if(waitingNum < runNum){
-            waitingNum ++;
+        if (waitingNum < runNum)
+        {
+            waitingNum++;
             toRun->Wait(lock);
-        }else{
+        }
+        else
+        {
             toRun->Broadcast(lock);
         }
         /*
         ... 执行后续操作
         */
-
     }
 };

@@ -85,7 +85,7 @@ public:
     bool Add(char *name, int newSector, FileSystem* filesys, bool isFile, FileHeader* myHeader); // Add a file name into the directory
 
     bool Remove(char *name); // Remove a file from the directory
-
+    bool Remove(int sec);
     void List();  // Print the names of all the files
                   //  in the directory
     void Print(); // Verbose print of the contents
@@ -99,6 +99,7 @@ private:
 
     int FindIndex(char *name); // Find the index into the directory
                                //  table corresponding to "name"
+    int FindIndex(int sec);
 };
 
 #endif // DIRECTORY_H

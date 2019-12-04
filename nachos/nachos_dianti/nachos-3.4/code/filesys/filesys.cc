@@ -77,16 +77,18 @@
 //	"format" -- should we initialize the disk?
 //----------------------------------------------------------------------
 
-FileSystem::FileSystem(bool format) {
+FileSystem::FileSystem(bool format)
+{
 	DEBUG('f', "Initializing the file system.\n");
-	if (format) {
+	if (format)
+	{
 		DEBUG('f', "Formatting the file system.\n");
 		BitMap *freeMap = new BitMap(NumSectors);
 		FileHeader *mapHdr = new FileHeader;
 
 		/*  标记空闲数据块的文件头的磁盘块号 */
 		freeMap->Mark(FreeMapSector);
-		freeMap->Mark(RootDirectorySector);   // 标记根目录文件头数据块
+		freeMap->Mark(RootDirectorySector); // 标记根目录文件头数据块
 
 		/*  给空闲位图分配文件数据块*/
 		ASSERT(mapHdr->Allocate(freeMap, FreeMapFileSize));
@@ -111,7 +113,8 @@ FileSystem::FileSystem(bool format) {
 		rootDirectoryFile = new OpenFile(RootDirectorySector);
 		rootDirectoryFile->filesys = this;
 
-		if (DebugIsEnabled('f')) {
+		if (DebugIsEnabled('f'))
+		{
 			freeMap->Print();
 			root->Print();
 
@@ -120,7 +123,9 @@ FileSystem::FileSystem(bool format) {
 			delete mapHdr;
 			delete rootDirHdr;
 		}
-	} else {
+	}
+	else
+	{
 		// if we are not formatting the disk, just open the files representing
 		// the bitmap and directory; these are left open while Nachos is running
 		freeMapFile = new OpenFile(FreeMapSector);
@@ -158,37 +163,42 @@ FileSystem::FileSystem(bool format) {
 //	"initialSize" -- size of file to be created
 //----------------------------------------------------------------------
 
-bool FileSystem::Create(char *name, int initialSize, bool isFile) {
-    int sector;
-    bool success;
+bool FileSystem::Create(char *name, int initialSize, bool isFile)
+{
+	int sector;
+	bool success;
 
-    DEBUG('f', "Creating dir %s\n", name);
+	DEBUG('f', "Creating dir %s\n", name);
 
-    int fatherSec = findFatherDirectory(name, RootDirectorySector);
-    OpenFile* fatherFile = new OpenFile(fatherSec);
-    Directory* fatherDir = new Directory();
-    fatherDir->FetchFrom(fatherFile);
-    FileHeader* fatherHdr = new FileHeader();
-    fatherHdr->FetchFrom(fatherSec);
+	int fatherSec = findFatherDirectory(name, RootDirectorySector);
+	OpenFile *fatherFile = new OpenFile(fatherSec);
+	Directory *fatherDir = new Directory();
+	fatherDir->FetchFrom(fatherFile);
+	FileHeader *fatherHdr = new FileHeader();
+	fatherHdr->FetchFrom(fatherSec);
 
-    if (fatherDir->Find(name) != -1) {
-        success = FALSE; // file is already in directory
-    } else {
-        sector = findEmptySector();
-        if (sector == -1)
-            success = FALSE; // no free block for file header
-        else {
-            fatherDir->Add(getFileName(name), sector, this, isFile, fatherHdr);
-            FileHeader* hdr = new FileHeader;
-            hdr->init(this);
-            hdr->WriteBack(sector);
-            fatherHdr->WriteBack(fatherSec);
-            fatherDir->WriteBack(fatherFile);
-            success = TRUE;
-            delete hdr;
-        }
-    }
-    return success;
+	if (fatherDir->Find(name) != -1)
+	{
+		success = FALSE; // file is already in directory
+	}
+	else
+	{
+		sector = findEmptySector();
+		if (sector == -1)
+			success = FALSE; // no free block for file header
+		else
+		{
+			fatherDir->Add(getFileName(name), sector, this, isFile, fatherHdr);
+			FileHeader *hdr = new FileHeader;
+			hdr->init(this);
+			hdr->WriteBack(sector);
+			fatherHdr->WriteBack(fatherSec);
+			fatherDir->WriteBack(fatherFile);
+			success = TRUE;
+			delete hdr;
+		}
+	}
+	return success;
 }
 
 //----------------------------------------------------------------------
@@ -203,21 +213,26 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
 //----------------------------------------------------------------------
 
 OpenFile *
-FileSystem::Open(char *name) {
+FileSystem::Open(char *name)
+{
 
 	Directory *directory = new Directory(findFatherDirectory(name, RootDirectorySector));
 	OpenFile *openFile = NULL;
 	int sector;
 	DEBUG('f', "Opening file %s\n", name);
 	sector = directory->Find(getFileName(name));
-	if (sector >= 0){
+	if (sector >= 0)
+	{
 		int index = openFileIndex(sector);
-		if(index == -1){
-			FileHeader* hdr = addFile2OpenTable(sector);
-			ASSERT(hdr != NULL);   // 最多打开1024文件
+		if (index == -1)
+		{
+			FileHeader *hdr = addFile2OpenTable(sector);
+			ASSERT(hdr != NULL);		  // 最多打开1024文件
 			openFile = new OpenFile(hdr); // name was found in directory
-		}else{
-			fileTable[index].openCount ++;
+		}
+		else
+		{
+			fileTable[index].openCount++;
 			openFile = new OpenFile(fileTable[index].fileHdr);
 		}
 	}
@@ -228,7 +243,8 @@ FileSystem::Open(char *name) {
 /*
 某个线程关闭打开的文件
 */
-void FileSystem::Close(OpenFile* openFile){
+void FileSystem::Close(OpenFile *openFile)
+{
 	/*
 	处理线程结构体中的数据
 	*/
@@ -236,11 +252,16 @@ void FileSystem::Close(OpenFile* openFile){
 	/*
 	处理总数据
 	*/
-	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
-		if(fileTable[i].fileHdr == openFile->hdr){
-			fileTable[i].openCount --;
-			if(fileTable[i].openCount == 0){
+	for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++)
+	{
+		if (fileTable[i].fileHdr == openFile->hdr)
+		{
+			fileTable[i].openCount--;
+			if (fileTable[i].openCount == 0)
+			{
 				delete fileTable[i].fileHdr;
+				if (fileTable[i].toRemove == TRUE)
+					deleteFile(fileTable[i].headSec);
 				fileTable[i].headSec = -1;
 			}
 			break;
@@ -261,7 +282,8 @@ void FileSystem::Close(OpenFile* openFile){
 //	"name" -- the text name of the file to be removed
 //----------------------------------------------------------------------
 
-bool FileSystem::Remove(char *name) {
+bool FileSystem::Remove(char *name)
+{
 	Directory *directory;
 	BitMap *freeMap;
 	FileHeader *fileHdr;
@@ -269,24 +291,35 @@ bool FileSystem::Remove(char *name) {
 
 	directory = new Directory(findFatherDirectory(name, RootDirectorySector));
 	sector = directory->Find(name);
-	if (sector == -1) {
+	if (sector == -1)
+	{
 		delete directory;
 		return FALSE; // file not found
 	}
-	fileHdr = new FileHeader;
+	int index = openFileIndex(sector);
+	if (index != -1)
+	{ // 文件正在打开
+		fileTable[index].toRemove = TRUE;
+		return TRUE;
+	}
+	return deleteFile(sec);
+}
+
+bool FileSystem::deleteFile(int sec)
+{
+	FileHeader *fileHdr = new FileHeader;
 	fileHdr->FetchFrom(sector);
 
-	freeMap = new BitMap(NumSectors);
+	BitMap *freeMap = new BitMap(NumSectors);
 	freeMap->FetchFrom(freeMapFile);
 
 	fileHdr->Deallocate(freeMap); // remove data blocks
-	freeMap->Clear(sector);       // remove header block
-	directory->Remove(name);
+	freeMap->Clear(sec);		  // remove header block
+	directory->Remove(sec);
 
-	freeMap->WriteBack(freeMapFile);     // flush to disk
+	freeMap->WriteBack(freeMapFile);		 // flush to disk
 	directory->WriteBack(rootDirectoryFile); // flush to disk
 	delete fileHdr;
-	delete directory;
 	delete freeMap;
 	return TRUE;
 }
@@ -296,7 +329,8 @@ bool FileSystem::Remove(char *name) {
 // 	List all the files in the file system directory.
 //----------------------------------------------------------------------
 
-void FileSystem::List() {
+void FileSystem::List()
+{
 	Directory *directory = new Directory();
 
 	directory->FetchFrom(rootDirectoryFile);
@@ -314,7 +348,8 @@ void FileSystem::List() {
 //	      the data in the file
 //----------------------------------------------------------------------
 
-void FileSystem::Print() {
+void FileSystem::Print()
+{
 	FileHeader *bitHdr = new FileHeader;
 	FileHeader *dirHdr = new FileHeader;
 	BitMap *freeMap = new BitMap(NumSectors);
@@ -343,8 +378,9 @@ void FileSystem::Print() {
 /*
  查找分配空闲磁盘块
  */
-int FileSystem::findEmptySector() {
-	BitMap* freeMap = new BitMap(NumSectors);
+int FileSystem::findEmptySector()
+{
+	BitMap *freeMap = new BitMap(NumSectors);
 	freeMap->FetchFrom(freeMapFile);
 	int sec = freeMap->Find();
 	freeMap->WriteBack(freeMapFile);
@@ -355,69 +391,105 @@ int FileSystem::findEmptySector() {
  分割文件名称， 获得其所属文件夹
  */
 
-int FileSystem::findFatherDirectory(char* name, int pwdSec) {
-	char* tmp = name;
-	if (*tmp == '/') {
+int FileSystem::findFatherDirectory(char *name, int pwdSec)
+{
+	char *tmp = name;
+	if (*tmp == '/')
+	{
 		tmp++;
 		name++;
 	}
 	int len = 0;
-	while (*tmp != '\0' && tmp != NULL && *tmp != '/') {
+	while (*tmp != '\0' && tmp != NULL && *tmp != '/')
+	{
 		len++;
 		tmp++;
 	}
-	char* fileName = new char[len+1];
+	char *fileName = new char[len + 1];
 	memcpy(fileName, name, len);
 	fileName[len] = '\0';
-	if (tmp == NULL || *tmp == '\0') {  // 文件
-        return pwdSec;
-	} else {       // 文件夹
-	    Directory* pwd = new Directory(pwdSec);
-        int childSec = pwd->Find(fileName);
-        if (childSec == -1)
-            return -1;
+	if (tmp == NULL || *tmp == '\0')
+	{ // 文件
+		return pwdSec;
+	}
+	else
+	{ // 文件夹
+		Directory *pwd = new Directory(pwdSec);
+		int childSec = pwd->Find(fileName);
+		if (childSec == -1)
+			return -1;
 		return findFatherDirectory(tmp, childSec);
 	}
 }
 
-char* FileSystem::getFileName(char* abName){
+char *FileSystem::getFileName(char *abName)
+{
 	int lastSep = -1;
 	int i = 0;
-	char* tmp = abName;
-	for(int j = strlen(abName)-1; j >= 0; j --){
-		if(abName[j] == '/'){
+	char *tmp = abName;
+	for (int j = strlen(abName) - 1; j >= 0; j--)
+	{
+		if (abName[j] == '/')
+		{
 			lastSep = j;
 			break;
 		}
 	}
-	if(lastSep == -1)
+	if (lastSep == -1)
 		return abName;
 	return abName + lastSep + 1;
 }
 
-int FileSystem::openFileIndex(int sec){
-	
-	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
-		if(fileTable[i].headSec == sec)
+int FileSystem::openFileIndex(int sec)
+{
+
+	for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++)
+	{
+		if (fileTable[i].headSec == sec)
 			return i;
 	}
 	return -1;
 }
-
-FileHeader* FileSystem::addFile2OpenTable(int sec){
-	int index = -1
-	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
-		if(fileTable[i].headSec == -1){
+int FileSystem::openFileIndex(OpenFile *file)
+{
+	for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++)
+	{
+		if (fileTable[i].fileHdr == file->hdr)
+			return i;
+	}
+	return -1;
+}
+FileHeader *FileSystem::addFile2OpenTable(int sec)
+{
+	int index = -1 for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++)
+	{
+		if (fileTable[i].headSec == -1)
+		{
 			index = i;
 			break;
 		}
 	}
-	if(index == -1)
+	if (index == -1)
 		return NULL;
-	FileHeader* hdr = new FileHeader();
-    hdr->FetchFrom(sec);
+	FileHeader *hdr = new FileHeader();
+	hdr->FetchFrom(sec);
 	fileTable[index].fileHdr = hdr;
 	fileTable[index].headSec = sec;
 	fileTable[index].openCount = 1;
 	return hdr;
+}
+
+int FileSystem::Read(OpenFile *file, char *into, int numBytes)
+{
+	int index = openFileIndex(file);
+	if (index == -1)
+		return -1;
+	fileTable[index].lock->reader(file->Read, into, numBytes);
+}
+int FileSystem::Write(OpenFile *file, char *into, int numBytes)
+{
+	int index = openFileIndex(file);
+	if (index == -1)
+		return -1;
+	fileTable[index].lock->writer(file->Write, into, numBytes);
 }

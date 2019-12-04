@@ -20,7 +20,7 @@
 #include "copyright.h"
 #include "thread.h"
 #include "list.h"
-
+#include "utility.h"
 // The following class defines a "semaphore" whose value is a non-negative
 // integer.  The semaphore has only two operations P() and V():
 //
@@ -83,8 +83,8 @@ private:
     char *name; // for debugging
                 // plus some other stuff you'll need to define
 
-    Thread* heldThread;
-    Semaphore* semaphore;
+    Thread *heldThread;
+    Semaphore *semaphore;
 };
 
 // The following class defines a "condition variable".  A condition
@@ -138,6 +138,18 @@ public:
 private:
     char *name;
     // plus some other stuff you'll need to define
-    List* queue;
+    List *queue;
+};
+class ReadWriteLock
+{
+    Lock *writeLock;     //控制写操作
+    Lock *readerNumLock; //控制读者数量
+    int readerNum;       //读者数量
+
+    /*  读者在读取数据时需要检查是否有写者在写，表现为可写的锁busy ,
+        第一个读者检查可写锁，其余读者则检查读者数量
+    */
+    void reader(VoidFunctionPtr func, char *into, int numBytes);
+    void writer(VoidFunctionPtr func, char *from, int numBytes);
 };
 #endif // SYNCH_H

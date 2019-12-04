@@ -37,6 +37,7 @@
 
 #include "copyright.h"
 #include "openfile.h"
+#include "synch.h"
 
 #define ALL_FILE_TABLE_SIZE 1024;
 #ifdef FILESYS_STUB // Temporarily implement file system calls as
@@ -71,15 +72,21 @@ public:
 
 #else // FILESYS
 class Directory;
-class OpenFileTable{   // 用于管理所有的打开文件
+class OpenFileTable
+{ // 用于管理所有的打开文件
 public:
 	int headSec;
-	FileHeader* fileHdr;
+	FileHeader *fileHdr;
 	int openCount;
-	OpenFileTable(){
+	bool toRemove;
+	ReadWriteLock *lock;
+	OpenFileTable()
+	{
 		headSec = -1;
 		fileHdr = NULL;
 		openCount = 0;
+		toRemove = FALSE;
+		lock = new ReadWriteLock();
 	}
 };
 class FileSystem
@@ -97,7 +104,7 @@ public:
 
 	OpenFile *Open(char *name); // Open a file (UNIX open)
 
-	void Close(OpenFile* openFile);   // 关闭一个打开文件
+	void Close(OpenFile *openFile); // 关闭一个打开文件
 
 	bool Remove(char *name); // Delete a file (UNIX unlink)
 
@@ -105,17 +112,27 @@ public:
 
 	void Print(); // List all the files and their contents
 
-	int findEmptySector();   // 返回一个可用的磁盘块号
-	int findFatherDirectory(char* name, int pwdSec);   // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
-	char* getFileName(char* abName);
+	int findEmptySector(); // 返回一个可用的磁盘块号
+
+	int findFatherDirectory(char *name, int pwdSec); // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
+
+	char *getFileName(char *abName);
+
 	int openFileIndex(int sec);
-	FileHeader* addFile2OpenTable(int sec);
+	int openFileIndex(OpenFile *file);
+
+	FileHeader *addFile2OpenTable(int sec);
+
+	int Read(OpenFile *file, char *into, int numBytes);
+	int Write(OpenFile *char *into, int numBytes);
+
 private:
-	OpenFile *freeMapFile;   // Bit map of free disk blocks,
-							 // represented as a file
+	bool deleteFile(int sec);
+	OpenFile *freeMapFile;		 // Bit map of free disk blocks,
+								 // represented as a file
 	OpenFile *rootDirectoryFile; // "Root" directory -- list of
-							 // file names, represented as a file
-	OpenFileTable* fileTable;
+								 // file names, represented as a file
+	OpenFileTable *fileTable;
 };
 
 #endif // FILESYS
