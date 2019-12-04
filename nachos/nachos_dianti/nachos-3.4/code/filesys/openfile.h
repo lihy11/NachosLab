@@ -79,6 +79,7 @@ class OpenFile
 public:
 	OpenFile(int sector); // Open a file whose header is located
 						  // at "sector" on the disk
+	OpenFile(FileHeader* hdr){seekPosition = 0; this->hdr = hdr};
 	~OpenFile();		  // Close the file
 
 	void Seek(int position); // Set the position from which to
@@ -100,9 +101,11 @@ public:
 				  // than the UNIX idiom -- lseek to
 				  // end of file, tell, lseek back
 	FileSystem* filesys;
+	
 private:
 	FileHeader *hdr;  // Header for this file
 	int seekPosition; // Current position within the file
+friend class FileSystem;
 
 };
 

@@ -126,6 +126,7 @@ FileSystem::FileSystem(bool format) {
 		freeMapFile = new OpenFile(FreeMapSector);
 		rootDirectoryFile = new OpenFile(RootDirectorySector);
 	}
+	fileTable = new OpenFileTable[ALL_FILE_TABLE_SIZE];
 }
 
 //----------------------------------------------------------------------
@@ -198,6 +199,7 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
 //	  Bring the header into memory
 //
 //	"name" -- the text name of the file to be opened
+// 对应线程管理，修改打开文件的方式，搜索当前是否已经打开了文件
 //----------------------------------------------------------------------
 
 OpenFile *
@@ -208,13 +210,43 @@ FileSystem::Open(char *name) {
 	int sector;
 	DEBUG('f', "Opening file %s\n", name);
 	sector = directory->Find(getFileName(name));
-	if (sector >= 0)
-		openFile = new OpenFile(sector); // name was found in directory
+	if (sector >= 0){
+		int index = openFileIndex(sector);
+		if(index == -1){
+			FileHeader* hdr = addFile2OpenTable(sector);
+			ASSERT(hdr != NULL);   // 最多打开1024文件
+			openFile = new OpenFile(hdr); // name was found in directory
+		}else{
+			fileTable[index].openCount ++;
+			openFile = new OpenFile(fileTable[index].fileHdr);
+		}
+	}
 	delete directory;
 	openFile->filesys = this;
 	return openFile; // return NULL if not found
 }
+/*
+某个线程关闭打开的文件
+*/
+void FileSystem::Close(OpenFile* openFile){
+	/*
+	处理线程结构体中的数据
+	*/
 
+	/*
+	处理总数据
+	*/
+	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
+		if(fileTable[i].fileHdr == openFile->hdr){
+			fileTable[i].openCount --;
+			if(fileTable[i].openCount == 0){
+				delete fileTable[i].fileHdr;
+				fileTable[i].headSec = -1;
+			}
+			break;
+		}
+	}
+}
 //----------------------------------------------------------------------
 // FileSystem::Remove
 // 	Delete a file from the file system.  This requires:
@@ -363,3 +395,29 @@ char* FileSystem::getFileName(char* abName){
 	return abName + lastSep + 1;
 }
 
+int FileSystem::openFileIndex(int sec){
+	
+	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
+		if(fileTable[i].headSec == sec)
+			return i;
+	}
+	return -1;
+}
+
+FileHeader* FileSystem::addFile2OpenTable(int sec){
+	int index = -1
+	for(int i = 0; i < ALL_FILE_TABLE_SIZE; i ++){
+		if(fileTable[i].headSec == -1){
+			index = i;
+			break;
+		}
+	}
+	if(index == -1)
+		return NULL;
+	FileHeader* hdr = new FileHeader();
+    hdr->FetchFrom(sec);
+	fileTable[index].fileHdr = hdr;
+	fileTable[index].headSec = sec;
+	fileTable[index].openCount = 1;
+	return hdr;
+}

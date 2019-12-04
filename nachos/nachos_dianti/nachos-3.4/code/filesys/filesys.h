@@ -38,6 +38,7 @@
 #include "copyright.h"
 #include "openfile.h"
 
+#define ALL_FILE_TABLE_SIZE 1024;
 #ifdef FILESYS_STUB // Temporarily implement file system calls as
 // calls to UNIX, until the real file system
 // implementation is available
@@ -70,6 +71,17 @@ public:
 
 #else // FILESYS
 class Directory;
+class OpenFileTable{   // 用于管理所有的打开文件
+public:
+	int headSec;
+	FileHeader* fileHdr;
+	int openCount;
+	OpenFileTable(){
+		headSec = -1;
+		fileHdr = NULL;
+		openCount = 0;
+	}
+};
 class FileSystem
 {
 public:
@@ -85,6 +97,8 @@ public:
 
 	OpenFile *Open(char *name); // Open a file (UNIX open)
 
+	void Close(OpenFile* openFile);   // 关闭一个打开文件
+
 	bool Remove(char *name); // Delete a file (UNIX unlink)
 
 	void List(); // List all the files in the file system
@@ -94,11 +108,14 @@ public:
 	int findEmptySector();   // 返回一个可用的磁盘块号
 	int findFatherDirectory(char* name, int pwdSec);   // 分割字符串，依次遍历目录结构找到该文件所属的文件夹
 	char* getFileName(char* abName);
+	int openFileIndex(int sec);
+	FileHeader* addFile2OpenTable(int sec);
 private:
 	OpenFile *freeMapFile;   // Bit map of free disk blocks,
 							 // represented as a file
 	OpenFile *rootDirectoryFile; // "Root" directory -- list of
 							 // file names, represented as a file
+	OpenFileTable* fileTable;
 };
 
 #endif // FILESYS

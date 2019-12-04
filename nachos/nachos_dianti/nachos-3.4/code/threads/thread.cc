@@ -45,6 +45,7 @@ void Thread::init(char *threadName)
     this->stackTop = NULL;
     this->stack = NULL;
     this->status = JUST_CREATED;
+    this->fileTable = new OpenFile[FILETABLESIZE];
 #ifdef USER_PROGRAM
     space = NULL;
 #endif

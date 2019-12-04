@@ -39,7 +39,7 @@
 
 #include "copyright.h"
 #include "utility.h"
-
+#include "openfile.h"
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
@@ -53,7 +53,8 @@
 // Size of the thread's private execution stack.
 // WATCH OUT IF THIS ISN'T BIG ENOUGH!!!!!
 #define StackSize (4 * 1024) // in words
-
+/*文件列表大小*/
+#define FILETABLESIZE 128;
 // Thread state
 enum ThreadStatus
 {
@@ -139,6 +140,10 @@ private:
     /* @lihaiyang  优先级， 0，1,2,3，0为内核线程，数字越小优先级越高*/
     int priority;   
     int ticks;
+    /*
+    打开文件列表, 
+    */
+    OpenFile* fileTable;
 public:
     void init(char* threadName);
     Thread(char *debugName, int userID);
