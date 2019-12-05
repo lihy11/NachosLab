@@ -408,10 +408,6 @@ char *FileSystem::getFileName(char *abName) {
 }
 
 int FileSystem::openFileIndex(int sec) {
-
-	for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++) {
-
-	}
 	for (int i = 0; i < ALL_FILE_TABLE_SIZE; i++) {
 		if (fileTable[i].headSec == sec)
 			return i;

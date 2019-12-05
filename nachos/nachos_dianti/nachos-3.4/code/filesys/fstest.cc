@@ -193,10 +193,10 @@ void PerformanceTest()
 void testSynchRead(){
 	OpenFile* file = fileSystem->Open("/home/li/test");
 	for(int i = 0; i < 5; i ++){
-		char buf[10];
+		char buf[10] = {};
 		fileSystem->fread(file, buf, 1);
 		printf("thread %s read 1 char from file , get char : %s\n", currentThread->getName(), buf);
-		currentThread->Sleep();
+		currentThread->Yield();
 	}
 }
 void testSynchWrite(){
@@ -205,7 +205,7 @@ void testSynchWrite(){
 		char* buf = "abcdefghijklmn";
 		fileSystem->fwrite(file, buf, 1);
 		printf("thread %s write 1 char from file , get char : %c\n", currentThread->getName(), buf[i]);
-		currentThread->Sleep();
+		currentThread->Yield();
 	}
 }
 
