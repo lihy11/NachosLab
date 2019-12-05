@@ -66,7 +66,7 @@ void Copy(char *from, char *to)
     delete[] buffer;
 
     // Close the UNIX and the Nachos files
-    delete openFile;
+
     fclose(fp);
 }
 
