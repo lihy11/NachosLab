@@ -82,8 +82,8 @@ public:
 	OpenFile(FileHeader *hdr)
 	{
 		seekPosition = 0;
-		this->hdr = hdr
-	};
+		this->hdr = hdr;
+	}
 	~OpenFile(); // Close the file
 
 	void Seek(int position); // Set the position from which to

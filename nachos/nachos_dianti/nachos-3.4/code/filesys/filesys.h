@@ -85,10 +85,10 @@ public:
 	OpenFileTable()
 	{
 		headSec = -1;
-		fileHdr = NULL;
+		fileHdr = 0;
 		openCount = 0;
 		toRemove = FALSE;
-		father = NULL;
+		father = 0;
 		lock = new ReadWriteLock();
 	}
 };

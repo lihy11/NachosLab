@@ -190,6 +190,24 @@ void PerformanceTest()
     }
     stats->Print();
 }
+void testSynchRead(){
+	OpenFile* file = fileSystem->Open("/home/li/test");
+	for(int i = 0; i < 5; i ++){
+		char buf[10];
+		fileSystem->fread(file, buf, 1);
+		printf("thread %s read 1 char from file , get char : %s\n", currentThread->getName(), buf);
+		currentThread->Sleep();
+	}
+}
+void testSynchWrite(){
+	OpenFile* file = fileSystem->Open("/home/li/test");
+	for(int i = 0; i < 5; i ++){
+		char* buf = "abcdefghijklmn";
+		fileSystem->fwrite(file, buf, 1);
+		printf("thread %s write 1 char from file , get char : %c\n", currentThread->getName(), buf[i]);
+		currentThread->Sleep();
+	}
+}
 
 void testFileSystem()
 {
@@ -197,6 +215,11 @@ void testFileSystem()
    fileSystem->Create("/tmp", 0, FALSE);
    fileSystem->Create("/home/li", 0, FALSE);
    Copy("/home/lihaiyang/test", "/home/li/test");
-   fileSystem->Print();
 
+   Thread* t1 = new Thread("thread1");
+   t1->Fork(testSynchRead, 0);
+   Thread* t2 = new Thread("thread2");
+   t2->Fork(testSynchRead, 0);
+   Thread* t3 = new Thread("thrad3");
+   t3->Fork(testSynchWrite, 0);
 }

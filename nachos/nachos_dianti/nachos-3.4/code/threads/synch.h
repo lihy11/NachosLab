@@ -149,7 +149,12 @@ class ReadWriteLock
     /*  读者在读取数据时需要检查是否有写者在写，表现为可写的锁busy ,
         第一个读者检查可写锁，其余读者则检查读者数量
     */
-    int reader(VoidFunctionPtr func, int file, char *into, int numBytes);
-    int writer(VoidFunctionPtr func, int file, char *from, int numBytes);
+public:
+    ReadWriteLock();
+    void prepareRead();
+    void doneRead();
+    void prepareWrite();
+    void doneWrite();
+
 };
 #endif // SYNCH_H

@@ -207,7 +207,7 @@ FileSystem::Open(char *name) {
 
 	Directory *directory = new Directory(
 			findFatherDirectory(name, RootDirectorySector));
-	OpenFile *openFile = NULL;
+	OpenFile *openFile = 0;
 	int sector;
 	DEBUG('f', "Opening file %s\n", name);
 	sector = directory->Find(getFileName(name));
@@ -215,7 +215,7 @@ FileSystem::Open(char *name) {
 		int index = openFileIndex(sector);
 		if (index == -1) {
 			FileHeader *hdr = addFile2OpenTable(sector, directory);
-			ASSERT(hdr != NULL);		  // 最多打开1024文件
+			ASSERT(hdr != 0);		  // 最多打开1024文件
 			openFile = new OpenFile(hdr); // name was found in directory
 		} else {
 			fileTable[index].openCount++;
@@ -374,14 +374,14 @@ int FileSystem::findFatherDirectory(char *name, int pwdSec) {
 		name++;
 	}
 	int len = 0;
-	while (*tmp != '\0' && tmp != NULL && *tmp != '/') {
+	while (*tmp != '\0' && tmp != 0 && *tmp != '/') {
 		len++;
 		tmp++;
 	}
 	char *fileName = new char[len + 1];
 	memcpy(fileName, name, len);
 	fileName[len] = '\0';
-	if (tmp == NULL || *tmp == '\0') { // 文件
+	if (tmp == 0 || *tmp == '\0') { // 文件
 		return pwdSec;
 	} else { // 文件夹
 		Directory *pwd = new Directory(pwdSec);
@@ -434,7 +434,7 @@ FileHeader *FileSystem::addFile2OpenTable(int sec, Directory* father) {
 		}
 	}
 	if (index == -1)
-		return NULL;
+		return 0;
 	FileHeader *hdr = new FileHeader();
 	hdr->FetchFrom(sec);
 	fileTable[index].fileHdr = hdr;
@@ -443,25 +443,22 @@ FileHeader *FileSystem::addFile2OpenTable(int sec, Directory* father) {
 	fileTable[index].father = father;
 	return hdr;
 }
-void ReadOpenFile(int file, char* buf, int numBytes) {
-	OpenFile* openFile = (OpenFile*) file;
-	openFile->Read(buf, numBytes);
-}
-void WriteOpenFile(int file, char* buf, int numBytes) {
-	OpenFile* openFile = (OpenFile*) file;
-	openFile->Write(buf, numBytes);
-}
+
 int FileSystem::fread(OpenFile *file, char *into, int numBytes) {
 	int index = openFileIndex(file);
 	if (index == -1)
 		return -1;
-	return fileTable[index].lock->reader(ReadOpenFile, (int)file, into,
-			numBytes);
+	fileTable[index].lock->prepareRead();
+	int count = file->Read(into, numBytes);
+	fileTable[index].lock->doneRead();
+	return count;
 }
 int FileSystem::fwrite(OpenFile *file, char *into, int numBytes) {
 	int index = openFileIndex(file);
 	if (index == -1)
 		return -1;
-	return fileTable[index].lock->writer(WriteOpenFile, (int)file, into,
-			numBytes);
+	fileTable[index].lock->prepareWrite();
+	int count = file->Write(into, numBytes);
+	fileTable[index].lock->doneWrite();
+	return count;
 }

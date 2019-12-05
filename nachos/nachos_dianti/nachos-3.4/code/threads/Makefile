@@ -135,73 +135,6 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/bits/stl_queue.h ../threads/system.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
  ../machine/timer.h ../threads/utility.h
-synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
- ../threads/copyright.h ../threads/synch.h ../threads/thread.h \
- ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
- ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
- /usr/include/i386-linux-gnu/sys/cdefs.h \
- /usr/include/i386-linux-gnu/bits/wordsize.h \
- /usr/include/i386-linux-gnu/gnu/stubs.h \
- /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/5/include/stddef.h \
- /usr/include/i386-linux-gnu/bits/types.h \
- /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
- /usr/include/i386-linux-gnu/bits/stdio_lim.h \
- /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/list.h ../threads/system.h \
- ../threads/scheduler.h /usr/include/c++/5/vector \
- /usr/include/c++/5/bits/stl_algobase.h \
- /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
- /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
- /usr/include/i386-linux-gnu/c++/5/bits/cpu_defines.h \
- /usr/include/c++/5/bits/functexcept.h \
- /usr/include/c++/5/bits/exception_defines.h \
- /usr/include/c++/5/bits/cpp_type_traits.h \
- /usr/include/c++/5/ext/type_traits.h \
- /usr/include/c++/5/ext/numeric_traits.h \
- /usr/include/c++/5/bits/stl_pair.h /usr/include/c++/5/bits/move.h \
- /usr/include/c++/5/bits/concept_check.h \
- /usr/include/c++/5/bits/stl_iterator_base_types.h \
- /usr/include/c++/5/bits/stl_iterator_base_funcs.h \
- /usr/include/c++/5/debug/debug.h /usr/include/c++/5/bits/stl_iterator.h \
- /usr/include/c++/5/bits/ptr_traits.h \
- /usr/include/c++/5/bits/predefined_ops.h \
- /usr/include/c++/5/bits/allocator.h \
- /usr/include/i386-linux-gnu/c++/5/bits/c++allocator.h \
- /usr/include/c++/5/ext/new_allocator.h /usr/include/c++/5/new \
- /usr/include/c++/5/exception \
- /usr/include/c++/5/bits/atomic_lockfree_defines.h \
- /usr/include/c++/5/bits/memoryfwd.h \
- /usr/include/c++/5/bits/stl_construct.h \
- /usr/include/c++/5/ext/alloc_traits.h \
- /usr/include/c++/5/bits/stl_uninitialized.h \
- /usr/include/c++/5/bits/stl_vector.h \
- /usr/include/c++/5/bits/stl_bvector.h \
- /usr/include/c++/5/bits/range_access.h \
- /usr/include/c++/5/bits/vector.tcc /usr/include/c++/5/queue \
- /usr/include/c++/5/deque /usr/include/c++/5/bits/stl_deque.h \
- /usr/include/c++/5/bits/deque.tcc /usr/include/c++/5/bits/stl_heap.h \
- /usr/include/c++/5/bits/stl_function.h \
- /usr/include/c++/5/backward/binders.h \
- /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../threads/utility.h
-synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
- ../threads/copyright.h ../threads/synchlist.h ../threads/list.h \
- ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
- ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
- /usr/include/i386-linux-gnu/sys/cdefs.h \
- /usr/include/i386-linux-gnu/bits/wordsize.h \
- /usr/include/i386-linux-gnu/gnu/stubs.h \
- /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/5/include/stddef.h \
- /usr/include/i386-linux-gnu/bits/types.h \
- /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
- /usr/include/i386-linux-gnu/bits/stdio_lim.h \
- /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/synch.h ../threads/thread.h
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -384,6 +317,73 @@ helloworld.o: ../threads/helloworld.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h
+synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
+ ../threads/copyright.h ../threads/synch.h ../threads/thread.h \
+ ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
+ ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/5/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/xlocale.h ../threads/list.h ../threads/system.h \
+ ../threads/scheduler.h /usr/include/c++/5/vector \
+ /usr/include/c++/5/bits/stl_algobase.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/cpu_defines.h \
+ /usr/include/c++/5/bits/functexcept.h \
+ /usr/include/c++/5/bits/exception_defines.h \
+ /usr/include/c++/5/bits/cpp_type_traits.h \
+ /usr/include/c++/5/ext/type_traits.h \
+ /usr/include/c++/5/ext/numeric_traits.h \
+ /usr/include/c++/5/bits/stl_pair.h /usr/include/c++/5/bits/move.h \
+ /usr/include/c++/5/bits/concept_check.h \
+ /usr/include/c++/5/bits/stl_iterator_base_types.h \
+ /usr/include/c++/5/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/5/debug/debug.h /usr/include/c++/5/bits/stl_iterator.h \
+ /usr/include/c++/5/bits/ptr_traits.h \
+ /usr/include/c++/5/bits/predefined_ops.h \
+ /usr/include/c++/5/bits/allocator.h \
+ /usr/include/i386-linux-gnu/c++/5/bits/c++allocator.h \
+ /usr/include/c++/5/ext/new_allocator.h /usr/include/c++/5/new \
+ /usr/include/c++/5/exception \
+ /usr/include/c++/5/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/5/bits/memoryfwd.h \
+ /usr/include/c++/5/bits/stl_construct.h \
+ /usr/include/c++/5/ext/alloc_traits.h \
+ /usr/include/c++/5/bits/stl_uninitialized.h \
+ /usr/include/c++/5/bits/stl_vector.h \
+ /usr/include/c++/5/bits/stl_bvector.h \
+ /usr/include/c++/5/bits/range_access.h \
+ /usr/include/c++/5/bits/vector.tcc /usr/include/c++/5/queue \
+ /usr/include/c++/5/deque /usr/include/c++/5/bits/stl_deque.h \
+ /usr/include/c++/5/bits/deque.tcc /usr/include/c++/5/bits/stl_heap.h \
+ /usr/include/c++/5/bits/stl_function.h \
+ /usr/include/c++/5/backward/binders.h \
+ /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../threads/utility.h
+synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
+ ../threads/copyright.h ../threads/synchlist.h ../threads/list.h \
+ ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
+ ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/5/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/xlocale.h ../threads/synch.h ../threads/thread.h
 interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/interrupt.h ../threads/list.h \
  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \

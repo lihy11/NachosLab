@@ -113,7 +113,7 @@ int Directory::FindIndex(char *name)
 }
 int Directory::FindIndex(int sec){
     for (int i = 0; i < tableSize; i++)
-        if (table[i].sector == sec))
+        if (table[i].sector == sec)
             return i;
     return -1; // name not in directory
 }

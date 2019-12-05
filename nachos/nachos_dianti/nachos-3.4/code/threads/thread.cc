@@ -42,10 +42,10 @@ void Thread::init(char *threadName)
     this->userID = 0;
     this->tid = scheduler->aquireTid(this);
     this->name = threadName;
-    this->stackTop = NULL;
-    this->stack = NULL;
+    this->stackTop = 0;
+    this->stack = 0;
     this->status = JUST_CREATED;
-    this->fileTable = new OpenFile[FILETABLESIZE];
+
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
