@@ -187,7 +187,7 @@ ReadWriteLock::ReadWriteLock()
     readerNumLock = new Lock("reader num lock");
     readerNum = 0;
 }
-void ReadWriteLock::reader(VoidFunctionPtr func, char *into, int numBytes)
+int ReadWriteLock::reader(VoidFunctionPtr func, int file, char *into, int numBytes)
 {
     readerNumLock->Acquire();
     readerNum++; //增加读者数量
@@ -195,9 +195,9 @@ void ReadWriteLock::reader(VoidFunctionPtr func, char *into, int numBytes)
     { //第一个读者，锁住写操作
         writeLock->Acquire();
     }
-    readerNumLock->Release();
+    int count =  readerNumLock->Release();
 
-    func(into, numBytes); //读取数据
+    func(file, into, numBytes); //读取数据
 
     readerNumLock->Acquire();
     readerNum--;
@@ -206,12 +206,14 @@ void ReadWriteLock::reader(VoidFunctionPtr func, char *into, int numBytes)
         writeLock->Release();
     }
     readerNumLock->Release();
+    return count;
 }
-void ReadWriteLock::writer(VoidFunctionPtr func, char *from, int numBytes)
+int ReadWriteLock::writer(VoidFunctionPtr func, int file, char *from, int numBytes)
 {
     writeLock->Acquire();
-    func(into, numBytes); //读取数据
+    int count = func(file, from, numBytes); //读取数据
     writeLock->Release();
+    return count;
 }
 
 

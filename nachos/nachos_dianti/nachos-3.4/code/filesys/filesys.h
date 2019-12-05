@@ -39,7 +39,8 @@
 #include "openfile.h"
 #include "synch.h"
 
-#define ALL_FILE_TABLE_SIZE 1024;
+#define ALL_FILE_TABLE_SIZE 1024
+
 #ifdef FILESYS_STUB // Temporarily implement file system calls as
 // calls to UNIX, until the real file system
 // implementation is available
@@ -79,6 +80,7 @@ public:
 	FileHeader *fileHdr;
 	int openCount;
 	bool toRemove;
+	Directory* father;
 	ReadWriteLock *lock;
 	OpenFileTable()
 	{
@@ -86,6 +88,7 @@ public:
 		fileHdr = NULL;
 		openCount = 0;
 		toRemove = FALSE;
+		father = NULL;
 		lock = new ReadWriteLock();
 	}
 };
@@ -121,13 +124,13 @@ public:
 	int openFileIndex(int sec);
 	int openFileIndex(OpenFile *file);
 
-	FileHeader *addFile2OpenTable(int sec);
+	FileHeader *addFile2OpenTable(int sec, Directory* father);
 
-	int Read(OpenFile *file, char *into, int numBytes);
-	int Write(OpenFile *char *into, int numBytes);
+	int fread(OpenFile *file, char *into, int numBytes);
+	int fwrite(OpenFile *file, char *into, int numBytes);
 
 private:
-	bool deleteFile(int sec);
+	bool deleteFile(int sec, Directory* directory);
 	OpenFile *freeMapFile;		 // Bit map of free disk blocks,
 								 // represented as a file
 	OpenFile *rootDirectoryFile; // "Root" directory -- list of
