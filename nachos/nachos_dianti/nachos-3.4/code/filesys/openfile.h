@@ -83,6 +83,7 @@ public:
 	{
 		seekPosition = 0;
 		this->hdr = hdr;
+		filesys = 0;
 	}
 	~OpenFile(); // Close the file
 
@@ -110,6 +111,18 @@ private:
 	FileHeader *hdr;  // Header for this file
 	int seekPosition; // Current position within the file
 	friend class FileSystem;
+};
+
+class PipeFile{
+private :
+	char* buffer;
+	int readPossion;
+	int writePossion;
+	int bufLen;
+public:
+	PipeFile();
+	int write(char* buf, int numBytes);
+	int read(char* buf, int numBytes);
 };
 
 #endif // FILESYS

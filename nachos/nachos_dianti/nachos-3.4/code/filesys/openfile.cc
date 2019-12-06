@@ -32,6 +32,7 @@ OpenFile::OpenFile(int sector)
     hdr = new FileHeader;
     hdr->FetchFrom(sector);
     seekPosition = 0;
+    filesys = 0;
 }
 
 //----------------------------------------------------------------------
@@ -197,4 +198,47 @@ int OpenFile::WriteAt(char *from, int numBytes, int position)
 int OpenFile::Length()
 {
     return hdr->FileLength();
+}
+
+/*
+ * pipefile class member func definion
+ *
+ * */
+PipeFile::PipeFile(){
+	readPossion = 0;
+	writePossion = 0;
+	bufLen = 0;
+	buffer = new char[4096];
+}
+
+int PipeFile::read(char* buf, int numBytes){
+	int count = 0;
+	if(numBytes + readPossion > bufLen){
+		count = bufLen - readPossion;
+	}else{
+		count = numBytes;
+	}
+	strncpy(buf, buffer + readPossion, count);
+	readPossion += count;
+	bufLen -= count;
+
+	char* newBuf = new char[4096];
+	strncpy(newBuf, buffer + readPossion, bufLen);
+	delete buffer;
+	buffer = newBuf;
+
+	return count;
+}
+int PipeFile::write(char* buf, int numBytes){
+	int count = 0;
+	if(writePossion + numBytes > 4096){
+		count = 4096 - writePossion;
+	}else{
+		count = numBytes;
+	}
+	strncpy(buffer+writePossion, buf, count);
+	writePossion += count;
+	bufLen += count;
+	return count;
+
 }
