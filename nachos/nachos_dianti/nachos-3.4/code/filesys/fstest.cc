@@ -218,8 +218,8 @@ void testFileSystem()
 
    Thread* t1 = new Thread("thread1");
    t1->Fork(testSynchRead, 0);
-   Thread* t2 = new Thread("thread2");
-   t2->Fork(testSynchRead, 0);
+//   Thread* t2 = new Thread("thread2");
+//   t2->Fork(testSynchRead, 0);
    Thread* t3 = new Thread("thrad3");
    t3->Fork(testSynchWrite, 0);
 }

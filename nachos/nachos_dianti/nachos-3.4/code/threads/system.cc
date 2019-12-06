@@ -58,12 +58,12 @@ extern void Cleanup();
 static void
 TimerInterruptHandler(int dummy)
 {
-    DEBUG('t', "DEBUG: Time Handler of Thread %d", currentThread->getTid());
-    if (interrupt->getStatus() != IdleMode && scheduler->checkRunTime(currentThread)){
-        interrupt->YieldOnReturn();
-    }else{
-        currentThread->addTick();    //增加当前线程的时间使用计数
-    }
+//    DEBUG('t', "DEBUG: Time Handler of Thread %d", currentThread->getTid());
+//    if (interrupt->getStatus() != IdleMode && scheduler->checkRunTime(currentThread)){
+//        interrupt->YieldOnReturn();
+//    }else{
+//        currentThread->addTick();    //增加当前线程的时间使用计数
+//    }
 }
 
 //----------------------------------------------------------------------
