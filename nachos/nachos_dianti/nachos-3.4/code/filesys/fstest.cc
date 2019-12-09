@@ -213,24 +213,24 @@ void pipeWrite(int arg) {
 	pipe->write(c, 1);
 }
 void testFileSystem() {
-//   fileSystem->Create("/home", 0, FALSE);
-//   fileSystem->Create("/tmp", 0, FALSE);
-//   fileSystem->Create("/home/li", 0, FALSE);
-//   Copy("/home/lihaiyang/test", "/home/li/test");
-//
-//   Thread* t1 = new Thread("thread1");
-//   t1->Fork(testSynchRead, 0);
+   fileSystem->Create("/home", 0, FALSE);
+   fileSystem->Create("/tmp", 0, FALSE);
+   fileSystem->Create("/home/li", 0, FALSE);
+   Copy("/home/lihaiyang/test", "/home/li/test");
+
+   Thread* t1 = new Thread("thread1");
+   t1->Fork(testSynchRead, 0);
 //   Thread* t2 = new Thread("thread2");
 //   t2->Fork(testSynchRead, 0);
-//   Thread* t3 = new Thread("thrad3");
-//   t3->Fork(testSynchWrite, 0);
+   Thread* t3 = new Thread("thrad3");
+   t3->Fork(testSynchWrite, 0);
 
 	/*
-	 * pipe test
-	 * */
-	PipeFile* pipe = new PipeFile();
-	Thread* write = new Thread("write");
-	write->Fork(pipeWrite, (void*) pipe);
-	Thread* read = new Thread("read");
-	read->Fork(pipeRead, (void*) pipe);
+//	 * pipe test
+//	 * */
+//	PipeFile* pipe = new PipeFile();
+//	Thread* write = new Thread("write");
+//	write->Fork(pipeWrite, (void*) pipe);
+//	Thread* read = new Thread("read");
+//	read->Fork(pipeRead, (void*) pipe);
 }

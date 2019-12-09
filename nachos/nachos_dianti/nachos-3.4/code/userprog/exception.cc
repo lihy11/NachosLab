@@ -56,14 +56,49 @@ void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);
 
-    if ((which == SyscallException) && (type == SC_Halt))
+    if (which == SyscallException)
     {
-        DEBUG('a', "Shutdown, initiated by user program.\n");
-        interrupt->Halt();
-    }else if((which == SyscallException) && (type == SC_Exit)){
-    	DEBUG('a', "Exit, exit the user prog.\n");
-    	printf("Exit code is %d\n", machine->ReadRegister(4));
-    	currentThread->Finish();
+    	switch(type){
+    	case SC_Halt:{
+    		 DEBUG('a', "Shutdown, initiated by user program.\n");
+    		 interrupt->Halt();
+    		 break;
+    	}
+    	case SC_Exit:{
+    		DEBUG('a', "Exit, exit the user prog.\n");
+    		printf("Exit code is %d\n", machine->ReadRegister(4));
+    		currentThread->Finish();
+    		break;
+    	}
+    	case SC_Exec:{
+    		break;
+    	}
+    	case SC_Fork:{
+    		break;
+    	}
+    	case SC_Yield:{
+    		break;
+    	}
+    	case SC_Join:{
+    		break;
+    	}
+    	case SC_Create:{
+    		break;
+    	}
+    	case SC_Open:{
+    		break;
+    	}
+    	case SC_Close:{
+    		break;
+    	}
+    	case SC_Write:{
+    		break;
+    	}
+    	case SC_Read:{
+    		break;
+    	}
+    	}
+
     }
     else if (which == PageFaultException)
     {
