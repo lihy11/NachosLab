@@ -29,6 +29,7 @@
 #include "machine.h"
 #include "system.h"
 extern Machine *machine;
+extern StartProcess(char* name);
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -71,18 +72,31 @@ void ExceptionHandler(ExceptionType which)
     		break;
     	}
     	case SC_Exec:{
+			char* name;            //TODO
+			Thread* newThread = new Thread("exec Thread");
+			newThread->Fork(StartProcess, name);
     		break;
     	}
-    	case SC_Fork:{
+    	case SC_Fork:{        //TODO
+			Thread* newThread = new Thread();
+			memcpy(newThread, currentThread, sizeof(Thread));
+
+			IntStatus oldLevel = interrupt->SetLevel(IntOff);
+    		scheduler->ReadyToRun(newThread); 
+    		(void)interrupt->SetLevel(oldLevel);
     		break;
     	}
     	case SC_Yield:{
+			DEBUG('a', "Yield thread %s\n", currentThread->getName());
+			currentThread->Yield();
     		break;
     	}
     	case SC_Join:{
     		break;
     	}
     	case SC_Create:{
+			int addr = machine->ReadRegister(4);
+			printf("creating file name addr is %x\n", addr);
     		break;
     	}
     	case SC_Open:{
