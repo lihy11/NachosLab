@@ -133,7 +133,7 @@ int OpenFile::ReadAt(char *into, int numBytes, int position)
 
     for (i = firstSector; i <= lastSector; i++)
     {
-        synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize, NULL),
+        synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize, this->filesys),
                               &buf[(i - firstSector) * SectorSize]);
     }
 

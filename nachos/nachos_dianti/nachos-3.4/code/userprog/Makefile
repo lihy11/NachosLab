@@ -9,7 +9,7 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-DEFINES = -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS_STUB
+DEFINES = -DTHREADS -DUSER_PROGRAM -DVM -DFILESYS_NEEDED -DFILESYS
 INCPATH = -I../bin -I../filesys -I../userprog -I../threads -I../machine
 HFILES = $(THREAD_H) $(USERPROG_H)
 CFILES = $(THREAD_C) $(USERPROG_C)
@@ -79,7 +79,8 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 list.o: ../threads/list.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/list.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -147,7 +148,8 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../threads/system.h \
  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/synch.h
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/synch.h \
+ ../filesys/synchdisk.h ../machine/disk.h
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -201,7 +203,8 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/thread.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -256,7 +259,8 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdio.h \
@@ -324,7 +328,8 @@ threadtest.o: ../threads/threadtest.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h ../machine/elevatortest.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h ../machine/elevatortest.h
 helloworld.o: ../threads/helloworld.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/i386-linux-gnu/sys/cdefs.h \
@@ -390,7 +395,8 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synchlist.h ../threads/list.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -462,7 +468,8 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/i386-linux-gnu/sys/cdefs.h \
@@ -559,7 +566,8 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 stats.o: ../machine/stats.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../threads/bool.h ../machine/sysdep.h /usr/include/stdio.h \
@@ -627,7 +635,8 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 elevatortest.o: ../machine/elevatortest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/elevatortest.h ../machine/elevator.h \
  ../threads/utility.h ../threads/copyright.h ../threads/bool.h \
@@ -699,7 +708,8 @@ elevator.o: ../machine/elevator.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -753,8 +763,8 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h ../userprog/addrspace.h \
- ../bin/noff.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h ../userprog/addrspace.h ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../userprog/bitmap.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -823,7 +833,8 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h ../userprog/syscall.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h ../userprog/syscall.h
 progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -877,8 +888,8 @@ progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h ../machine/console.h \
- ../userprog/addrspace.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h ../machine/console.h ../userprog/addrspace.h
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/console.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -932,7 +943,8 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -986,7 +998,8 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -1041,7 +1054,8 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -1095,7 +1109,8 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/c++/5/backward/binders.h \
  /usr/include/c++/5/bits/stl_queue.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../filesys/openfile.h ../threads/synch.h ../filesys/synchdisk.h \
+ ../machine/disk.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

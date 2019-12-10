@@ -47,13 +47,17 @@ void StartProcess(char *filename)
  * test vm
  * */
 void testProg(){
-	char* filename1 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/sort";
-	char* filename2 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/matmult";
+//	char* filename1 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/sort";
+//	char* filename2 = "/home/lihaiyang/Desktop/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/matmult";
+//
+//	Thread* thread1 = new Thread("sort");
+//	thread1->Fork(StartProcess, filename1);
+//    Thread* thread2 = new Thread("matmult");
+//    thread2->Fork(StartProcess, filename2);
 
-	Thread* thread1 = new Thread("sort");
-	thread1->Fork(StartProcess, filename1);
-    Thread* thread2 = new Thread("matmult");
-    thread2->Fork(StartProcess, filename2);
+	char* name = "/home/li/file";
+	Thread* thread = new Thread("file");
+	thread->Fork(StartProcess, name);
 }
 // Data structures needed for the console test.  Threads making
 // I/O requests wait on a Semaphore to delay until the I/O completes.

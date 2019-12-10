@@ -80,25 +80,22 @@ extern void testFileSystem();
 //		ex: "nachos -d +" -> argv = {"nachos", "-d", "+"}
 //----------------------------------------------------------------------
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	printHello();
 	int argCount; // the number of arguments
 	// for a particular command
 
 	DEBUG('t', "Entering main");
-	(void)Initialize(argc, argv);
+	(void) Initialize(argc, argv);
 
 //#ifdef THREADS
 //	ThreadTest();
 //#endif
 //
-//#ifdef USER_PROGRAM
-//	testProg();
-//#endif // USER_PROGRAM
-#ifdef FILESYS
 	testFileSystem();
-#endif						 // FILESYS
+
+	testProg();
+
 	currentThread->Finish(); //
 	return (0);				 // Not reached...
 }

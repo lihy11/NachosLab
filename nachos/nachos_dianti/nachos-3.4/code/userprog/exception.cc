@@ -25,10 +25,11 @@
 #include "system.h"
 #include "syscall.h"
 
-/*  for coding */
+///*  for coding */
 #include "machine.h"
-#include "system.h"
+#include "filesys.h"
 extern Machine *machine;
+extern FileSystem* fileSystem;
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -51,76 +52,100 @@ extern Machine *machine;
 //	"which" is the kind of exception.  The list of possible exceptions
 //	are in machine.h.
 //----------------------------------------------------------------------
+int translateAddr(int vaddr) {
+	int faddr = 0;
+	machine->ReadMem(vaddr, 4, &faddr);
+	machine->Translate(vaddr, &faddr, 4, FALSE);
+	printf("translating vaddr %x to faddr %x\n", vaddr,
+			machine->mainMemory + faddr);
+	return machine->mainMemory + faddr;
+}
+void SyscallHandler(int type) {
+	switch (type) {
+	case SC_Halt: {
+		DEBUG('a', "Shutdown, initiated by user program.\n");
+		interrupt->Halt();
+		break;
+	}
+	case SC_Exit: {
+		DEBUG('a', "Exit, exit the user prog.\n");
+		printf("Exit code is %d\n", machine->ReadRegister(4));
+		currentThread->Finish();
+		break;
+	}
+	case SC_Exec: {
+		break;
+	}
+	case SC_Fork: {
+		break;
+	}
+	case SC_Yield: {
+		break;
+	}
+	case SC_Join: {
+		break;
+	}
+	case SC_Create: {
+		char* name = (char*) translateAddr(machine->ReadRegister(4));
+		fileSystem->Create(name, 0, TRUE);
+//		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+		break;
+	}
+	case SC_Open: {
+		char* name = (char*) translateAddr(machine->ReadRegister(4));
+		OpenFile* openfile = fileSystem->Open(name);
+		machine->WriteRegister(2, (int) openfile);
+//		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+		break;
+	}
+	case SC_Close: {
+		int fileAddr = machine->ReadRegister(4);
+		fileSystem->Close((OpenFile*) fileAddr);
+//		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+		break;
+	}
+	case SC_Write: {
+		char* name = (char*) translateAddr(machine->ReadRegister(4));
+		int size = translateAddr(machine->ReadRegister(5));
+		OpenFile* file = (OpenFile*) translateAddr(machine->ReadRegister(6));
 
-void ExceptionHandler(ExceptionType which)
-{
-    int type = machine->ReadRegister(2);
+		fileSystem->fwrite(file, name, size);
+//		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+		break;
+	}
+	case SC_Read: {
+		char* name = (char*) translateAddr(machine->ReadRegister(4));
+		int size = translateAddr(machine->ReadRegister(5));
+		OpenFile* file = (OpenFile*) translateAddr(machine->ReadRegister(6));
 
-    if (which == SyscallException)
-    {
-    	switch(type){
-    	case SC_Halt:{
-    		 DEBUG('a', "Shutdown, initiated by user program.\n");
-    		 interrupt->Halt();
-    		 break;
-    	}
-    	case SC_Exit:{
-    		DEBUG('a', "Exit, exit the user prog.\n");
-    		printf("Exit code is %d\n", machine->ReadRegister(4));
-    		currentThread->Finish();
-    		break;
-    	}
-    	case SC_Exec:{
-    		break;
-    	}
-    	case SC_Fork:{
-    		break;
-    	}
-    	case SC_Yield:{
-    		break;
-    	}
-    	case SC_Join:{
-    		break;
-    	}
-    	case SC_Create:{
-    		break;
-    	}
-    	case SC_Open:{
-    		break;
-    	}
-    	case SC_Close:{
-    		break;
-    	}
-    	case SC_Write:{
-    		break;
-    	}
-    	case SC_Read:{
-    		break;
-    	}
-    	}
+		int num = fileSystem->fread(file, name, size);
+		machine->WriteRegister(2, num);
+//		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+		break;
+	}
+	}
 
-    }
-    else if (which == PageFaultException)
-    {
-        /*
-            虚拟内存缺页中断。
-            1.对于TLB， 用需要替换的地址替换TLB中现有的某一项，应该查询页表找到对应项，再利用选择算法替换某一项
-            2.对于页表，需要将对应的磁盘数据读取至内存，为其分配一个物理内存，并在页表中添加其转换关系。
-        */
-        int badAddr = machine->ReadRegister(BadVAddrReg);
-        DEBUG('a', "Page fault exception of addr %x.\n", badAddr);
-        if (machine->tlb != NULL)
-        { //使用tlb
-            machine->replaceTlb(badAddr);
-        }
-        else
-        {
-            machine->replacePageTable(badAddr);
-        }
-    }
-    else
-    {
-        printf("Unexpected user mode exception %d %d\n", which, type);
-        ASSERT(FALSE);
-    }
+}
+void ExceptionHandler(ExceptionType which) {
+	int type = machine->ReadRegister(2);
+
+	if (which == SyscallException) {
+		return SyscallHandler(type);
+	} else if (which == PageFaultException) {
+		/*
+		 虚拟内存缺页中断。
+		 1.对于TLB， 用需要替换的地址替换TLB中现有的某一项，应该查询页表找到对应项，再利用选择算法替换某一项
+		 2.对于页表，需要将对应的磁盘数据读取至内存，为其分配一个物理内存，并在页表中添加其转换关系。
+		 */
+		int badAddr = machine->ReadRegister(BadVAddrReg);
+		DEBUG('a', "Page fault exception of addr %x.\n", badAddr);
+		if (machine->tlb != NULL) { //使用tlb
+			machine->replaceTlb(badAddr);
+		} else {
+			machine->replacePageTable(badAddr);
+		}
+	} else {
+		printf("Unexpected user mode exception %d %d\n", which, type);
+		ASSERT(FALSE);
+	}
 }

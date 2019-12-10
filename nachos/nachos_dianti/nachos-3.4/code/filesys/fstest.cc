@@ -21,7 +21,7 @@
 #include "disk.h"
 #include "stats.h"
 
-#define TransferSize 10 // make it small, just to be difficult
+#define TransferSize 64 // make it small, just to be difficult
 
 //----------------------------------------------------------------------
 // Copy
@@ -216,14 +216,15 @@ void testFileSystem() {
    fileSystem->Create("/home", 0, FALSE);
    fileSystem->Create("/tmp", 0, FALSE);
    fileSystem->Create("/home/li", 0, FALSE);
+   char* name = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/file";
+   Copy(name, "/home/li/file");
    Copy("/home/lihaiyang/test", "/home/li/test");
-
-   Thread* t1 = new Thread("thread1");
-   t1->Fork(testSynchRead, 0);
-//   Thread* t2 = new Thread("thread2");
-//   t2->Fork(testSynchRead, 0);
-   Thread* t3 = new Thread("thrad3");
-   t3->Fork(testSynchWrite, 0);
+//   Thread* t1 = new Thread("thread1");
+//   t1->Fork(testSynchRead, 0);
+////   Thread* t2 = new Thread("thread2");
+////   t2->Fork(testSynchRead, 0);
+//   Thread* t3 = new Thread("thrad3");
+//   t3->Fork(testSynchWrite, 0);
 
 	/*
 //	 * pipe test
