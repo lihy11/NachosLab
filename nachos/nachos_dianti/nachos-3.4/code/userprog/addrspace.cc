@@ -133,6 +133,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         int dataPages = divRoundUp(noffH.initData.size + offset, PageSize);    //总计需要的页面数量
         int totalDataSize = dataPages * PageSize;
         char* allDisk = new char[totalDataSize];    //分配一个大块磁盘
+        bzero(allDisk, totalDataSize);
         executable->ReadAt(allDisk + offset,
                            noffH.initData.size, noffH.initData.inFileAddr);   //读取所有数据到磁盘上
         for(int i = 0; i < dataPages; i ++){   //  分割磁盘块

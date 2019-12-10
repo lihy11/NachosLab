@@ -106,8 +106,8 @@ void SyscallHandler(int type) {
 	}
 	case SC_Write: {
 		char* name = (char*) translateAddr(machine->ReadRegister(4));
-		int size = translateAddr(machine->ReadRegister(5));
-		OpenFile* file = (OpenFile*) translateAddr(machine->ReadRegister(6));
+		int size = machine->ReadRegister(5);
+		OpenFile* file = (OpenFile*) machine->ReadRegister(6);
 
 		fileSystem->fwrite(file, name, size);
 //		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
@@ -115,8 +115,8 @@ void SyscallHandler(int type) {
 	}
 	case SC_Read: {
 		char* name = (char*) translateAddr(machine->ReadRegister(4));
-		int size = translateAddr(machine->ReadRegister(5));
-		OpenFile* file = (OpenFile*) translateAddr(machine->ReadRegister(6));
+		int size = machine->ReadRegister(5);
+		OpenFile* file = (OpenFile*) machine->ReadRegister(6);
 
 		int num = fileSystem->fread(file, name, size);
 		machine->WriteRegister(2, num);
