@@ -107,7 +107,9 @@ public:
     char *getName() { return (name); }
     void Print() { printf("%s, ", name); }
     void setPCStatus(void* func){machineState[32/4-1] = func;}
-
+    void StackAllocate(VoidFunctionPtr func, void *arg);
+       // Allocate a stack for thread.
+       // Used internally by Fork()
 private:
     // some of the private data for this class is listed above
 
@@ -116,9 +118,7 @@ private:
                          // (If NULL, don't deallocate stack)
     ThreadStatus status; // ready, running or blocked
     char *name;
-    void StackAllocate(VoidFunctionPtr func, void *arg);
-    // Allocate a stack for thread.
-    // Used internally by Fork()
+
 
 #ifdef USER_PROGRAM
     // A thread running a user program actually has *two* sets of CPU registers --

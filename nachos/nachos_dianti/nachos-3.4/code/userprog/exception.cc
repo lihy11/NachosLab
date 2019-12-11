@@ -57,8 +57,8 @@ int translateAddr(int vaddr) {
 	int faddr = 0;
 	machine->ReadMem(vaddr, 4, &faddr);
 	machine->Translate(vaddr, &faddr, 4, FALSE);
-	printf("translating vaddr %x to faddr %x\n", vaddr,
-			machine->mainMemory + faddr);
+//	printf("translating vaddr %x to faddr %x\n", vaddr,
+//			machine->mainMemory + faddr);
 	return machine->mainMemory + faddr;
 }
 
@@ -97,10 +97,9 @@ void SyscallHandler(int type) {
 	case SC_Fork: {
 		void* func = (void*) machine->ReadRegister(4);
 		Thread* fork = new Thread("fork");
-		memcpy(fork, currentThread, sizeof(Thread));
+		fork->StackAllocate((VoidFunctionPtr)func, 0);
 	    AddrSpace* newspace = new AddrSpace(currentThread);
 		fork->space = newspace;
-		fork->setPCStatus(func);
 		printf("forking func addr %x\n", (int)func);
 		scheduler->ReadyToRun(fork);
 		break;
