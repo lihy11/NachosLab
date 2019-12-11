@@ -40,9 +40,9 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/system.h ../threads/thread.h \
- ../machine/machine.h ../threads/utility.h ../machine/translate.h \
- ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/list.h ../machine/machine.h ../threads/utility.h \
+ ../machine/translate.h ../machine/disk.h ../threads/list.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -163,10 +163,10 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -218,10 +218,10 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../threads/list.h \
- ../userprog/addrspace.h ../filesys/openfile.h ../threads/switch.h \
- ../threads/synch.h ../threads/list.h ../threads/system.h \
+ /usr/include/xlocale.h ../threads/list.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
+ ../threads/switch.h ../threads/synch.h ../threads/system.h \
  ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
@@ -288,10 +288,10 @@ threadtest.o: ../threads/threadtest.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -355,9 +355,9 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../threads/list.h \
- ../userprog/addrspace.h ../filesys/openfile.h ../threads/list.h \
+ /usr/include/xlocale.h ../threads/list.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
  ../threads/system.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
@@ -429,9 +429,9 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/system.h ../threads/thread.h \
- ../machine/machine.h ../threads/utility.h ../machine/translate.h \
- ../machine/disk.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/list.h ../machine/machine.h ../threads/utility.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -526,10 +526,10 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  ../machine/interrupt.h ../threads/list.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
- ../threads/system.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/system.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/openfile.h \
+ ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -596,9 +596,9 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/thread.h ../threads/list.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../threads/list.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -651,9 +651,9 @@ elevatortest.o: ../machine/elevatortest.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/list.h ../threads/utility.h \
- ../threads/synch.h ../threads/thread.h ../machine/machine.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/list.h ../threads/thread.h
+ ../threads/synch.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/thread.h
 elevator.o: ../machine/elevator.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/elevator.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -669,9 +669,9 @@ elevator.o: ../machine/elevator.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/list.h ../threads/utility.h \
- ../threads/system.h ../threads/thread.h ../machine/machine.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/system.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -723,10 +723,10 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -793,10 +793,10 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -848,10 +848,10 @@ progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -904,9 +904,9 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/thread.h ../threads/list.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../threads/list.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -960,8 +960,8 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../machine/translate.h ../machine/disk.h \
  ../threads/list.h ../threads/utility.h ../threads/system.h \
- ../threads/thread.h ../machine/machine.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/thread.h ../threads/list.h ../machine/machine.h \
+ ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1015,9 +1015,9 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../machine/translate.h ../machine/disk.h \
  ../threads/list.h ../threads/utility.h ../machine/mipssim.h \
- ../threads/system.h ../threads/thread.h ../machine/machine.h \
- ../userprog/addrspace.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/system.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../userprog/addrspace.h ../filesys/openfile.h \
+ ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1072,7 +1072,7 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/xlocale.h ../machine/translate.h ../machine/disk.h \
  ../threads/list.h ../threads/utility.h ../userprog/addrspace.h \
  ../filesys/openfile.h ../threads/system.h ../threads/thread.h \
- ../machine/machine.h ../threads/scheduler.h ../threads/list.h \
+ ../threads/list.h ../machine/machine.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1126,9 +1126,9 @@ directory.o: ../filesys/directory.cc /usr/include/stdc-predef.h \
  /usr/include/xlocale.h ../filesys/filehdr.h ../machine/disk.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../filesys/directory.h \
  ../filesys/openfile.h ../threads/list.h ../threads/utility.h \
- ../threads/system.h ../threads/thread.h ../machine/machine.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/system.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1181,10 +1181,10 @@ filehdr.o: ../filesys/filehdr.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/wchar.h ../threads/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ /usr/include/xlocale.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1239,9 +1239,9 @@ filesys.o: ../filesys/filesys.cc /usr/include/stdc-predef.h \
  /usr/include/xlocale.h ../userprog/bitmap.h ../filesys/openfile.h \
  ../filesys/directory.h ../filesys/openfile.h ../threads/list.h \
  ../threads/utility.h ../filesys/filehdr.h ../filesys/filesys.h \
- ../threads/synch.h ../threads/thread.h ../machine/machine.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../threads/list.h
+ ../threads/synch.h ../threads/thread.h ../threads/list.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h
 fstest.o: ../filesys/fstest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../threads/bool.h ../machine/sysdep.h /usr/include/stdio.h \
@@ -1257,9 +1257,9 @@ fstest.o: ../filesys/fstest.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../filesys/filesys.h ../filesys/openfile.h \
  ../threads/synch.h ../threads/thread.h ../threads/utility.h \
- ../machine/machine.h ../machine/translate.h ../machine/disk.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/list.h ../threads/system.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/machine.h ../machine/translate.h \
+ ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/system.h ../threads/scheduler.h \
  /usr/include/c++/5/vector /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1312,9 +1312,9 @@ openfile.o: ../filesys/openfile.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../userprog/bitmap.h ../filesys/openfile.h \
  ../filesys/openfile.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/thread.h ../threads/list.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../threads/list.h \
+ ../userprog/addrspace.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \
@@ -1366,9 +1366,9 @@ synchdisk.o: ../filesys/synchdisk.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/synch.h ../threads/thread.h \
- ../threads/utility.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../threads/list.h ../userprog/addrspace.h \
- ../filesys/openfile.h ../threads/list.h
+ ../threads/utility.h ../threads/list.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../threads/list.h \
+ ../userprog/addrspace.h ../filesys/openfile.h
 disk.o: ../machine/disk.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/disk.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -1384,9 +1384,9 @@ disk.o: ../machine/disk.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h /usr/include/c++/5/vector \
+ ../threads/thread.h ../threads/list.h ../machine/machine.h \
+ ../machine/translate.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/openfile.h ../threads/scheduler.h /usr/include/c++/5/vector \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/i386-linux-gnu/c++/5/bits/c++config.h \
  /usr/include/i386-linux-gnu/c++/5/bits/os_defines.h \

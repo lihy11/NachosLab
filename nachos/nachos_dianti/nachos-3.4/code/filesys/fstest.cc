@@ -216,9 +216,10 @@ void testFileSystem() {
    fileSystem->Create("/home", 0, FALSE);
    fileSystem->Create("/tmp", 0, FALSE);
    fileSystem->Create("/home/li", 0, FALSE);
-   char* name = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/file";
-   Copy(name, "/home/li/file");
-   Copy("/home/lihaiyang/test", "/home/li/test");
+   char* name1 = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/thread1";
+   char* name2 = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/thread2";
+   Copy(name1, "/home/li/thread1");
+   Copy(name2, "/home/li/thread2");
 //   Thread* t1 = new Thread("thread1");
 //   t1->Fork(testSynchRead, 0);
 ////   Thread* t2 = new Thread("thread2");

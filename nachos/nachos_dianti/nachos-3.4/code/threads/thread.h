@@ -153,6 +153,7 @@ public:
     void addTick(){ this->ticks += 1;}
     void clearTicks(){this->ticks = 0;}
     List* waitingList;
+    int exitCode;
 };
 
 // Magical machine-dependent routines, defined in switch.s

@@ -55,8 +55,8 @@ void testProg(){
 //    Thread* thread2 = new Thread("matmult");
 //    thread2->Fork(StartProcess, filename2);
 
-	char* name = "/home/li/file";
-	Thread* thread = new Thread("file");
+	char* name = "/home/li/thread1";
+	Thread* thread = new Thread("thread1");
 	thread->Fork(StartProcess, name);
 }
 // Data structures needed for the console test.  Threads making

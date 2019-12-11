@@ -72,40 +72,56 @@ void SyscallHandler(int type) {
 	case SC_Exit: {
 		DEBUG('a', "Exit, exit the user prog.\n");
 		printf("Exit code is %d\n", machine->ReadRegister(4));
+		currentThread->exitCode = machine->ReadRegister(4);
+
+		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		while (!currentThread->waitingList->IsEmpty()) {
 			Thread *t = (Thread *) currentThread->waitingList->Remove();
 			if (t != NULL) {
 				scheduler->ReadyToRun(t);
 			}
 		}
+		interrupt->SetLevel(oldLevel);
+
 		currentThread->Finish();
 		break;
 	}
 	case SC_Exec: {
 		char* name = (char*) translateAddr(machine->ReadRegister(4));
-		Thread* exec = new Thread("exec");
+		printf("execing prog %s\n", name);
+		Thread* exec = new Thread("thread2");
 		exec->Fork(StartProcess, (void*)name);
 		machine->WriteRegister(2, exec->getTid());
 		break;
 	}
 	case SC_Fork: {
-		void* func = (void*) translateAddr(machine->ReadRegister(4));
+		void* func = (void*) machine->ReadRegister(4);
 		Thread* fork = new Thread("fork");
-		memcpy(fork, cur, sizeof(Thread));
+		memcpy(fork, currentThread, sizeof(Thread));
 	    AddrSpace* newspace = new AddrSpace(currentThread);
 		fork->space = newspace;
 		fork->setPCStatus(func);
+		printf("forking func addr %x\n", (int)func);
+		scheduler->ReadyToRun(fork);
 		break;
 	}
 	case SC_Yield: {
+		printf("yield thread %s\n", currentThread->getName());
 		currentThread->Yield();
 		break;
 	}
 	case SC_Join: {
-		int tid = translateAddr(machine->ReadRegister(4));
+		int tid = machine->ReadRegister(4);
 		Thread* waitFor = scheduler->getThreadByTid(tid);
 		currentThread->waitingList->Append((void*)waitFor);
+
+		printf("thread %s join thread %s\n", currentThread->getName(), waitFor->getName());
+
+		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		currentThread->Sleep();
+		interrupt->SetLevel(oldLevel);
+
+		machine->WriteRegister(2, waitFor->exitCode);
 		break;
 	}
 	case SC_Create: {

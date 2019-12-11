@@ -46,10 +46,10 @@ SwapHeader(NoffHeader *noffH)
 }
 AddrSpace::AddrSpace(Thread* toCopy){
     numPages = toCopy->space->numPages;
-    pageTable = new TranslateEntry[numPages];
+    pageTable = new TranslationEntry[numPages];
     for(int i = 0; i < numPages; i ++){
-        if(toCopy->space->pageTable[i].codaData == TRUE){
-            memcpy(&pageTable[i], &(toCopy->space->pageTable[i]), sizeof(TranslateEntry));
+        if(toCopy->space->pageTable[i].codeData == TRUE){
+            memcpy(&pageTable[i], &(toCopy->space->pageTable[i]), sizeof(TranslationEntry));
         }
     }
 }

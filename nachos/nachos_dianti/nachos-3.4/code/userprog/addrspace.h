@@ -17,7 +17,7 @@
 #include "openfile.h"
 
 #define UserStackSize 1024 // increase this as necessary!
-
+class Thread;
 class AddrSpace
 {
 public:

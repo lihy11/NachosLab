@@ -352,7 +352,7 @@ Scheduler::multiPriorityQueue()
 Thread* Scheduler::getThreadByTid(int tid){
     for (std::vector<Thread *>::iterator t0 = threadPool.begin(); t0 < threadPool.end(); t0++)
     {
-        if (*t0->getTid() == tid)
+        if ((*t0)->getTid() == tid)
         {
             return *t0;
         }
