@@ -45,6 +45,19 @@ public:
 
     bool onDisk; //当前页面是否在磁盘上，和在磁盘上的地址
     int diskAddr;
+    bool codeData;  // 是否为存储代码和数据的页面
+    TranslationEntry(){
+        virtualPage = -1;
+        physicalPage = -1;
+        valid = FALSE;
+        readOnly = FALSE;
+        use = FALSE;
+        dirty = FALSE;
+        count = 0;
+        onDisk = FALSE;
+        diskAddr = 0;
+        codeData = FALSE;
+    }
 };
 
 #endif

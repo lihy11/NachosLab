@@ -30,6 +30,7 @@
 #include "filesys.h"
 extern Machine *machine;
 extern FileSystem* fileSystem;
+extern void StartProcess(char *filename);
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -60,6 +61,7 @@ int translateAddr(int vaddr) {
 			machine->mainMemory + faddr);
 	return machine->mainMemory + faddr;
 }
+
 void SyscallHandler(int type) {
 	switch (type) {
 	case SC_Halt: {
@@ -70,19 +72,40 @@ void SyscallHandler(int type) {
 	case SC_Exit: {
 		DEBUG('a', "Exit, exit the user prog.\n");
 		printf("Exit code is %d\n", machine->ReadRegister(4));
+		while (!currentThread->waitingList->IsEmpty()) {
+			Thread *t = (Thread *) currentThread->waitingList->Remove();
+			if (t != NULL) {
+				scheduler->ReadyToRun(t);
+			}
+		}
 		currentThread->Finish();
 		break;
 	}
 	case SC_Exec: {
+		char* name = (char*) translateAddr(machine->ReadRegister(4));
+		Thread* exec = new Thread("exec");
+		exec->Fork(StartProcess, (void*)name);
+		machine->WriteRegister(2, exec->getTid());
 		break;
 	}
 	case SC_Fork: {
+		void* func = (void*) translateAddr(machine->ReadRegister(4));
+		Thread* fork = new Thread("fork");
+		memcpy(fork, cur, sizeof(Thread));
+	    AddrSpace* newspace = new AddrSpace(currentThread);
+		fork->space = newspace;
+		fork->setPCStatus(func);
 		break;
 	}
 	case SC_Yield: {
+		currentThread->Yield();
 		break;
 	}
 	case SC_Join: {
+		int tid = translateAddr(machine->ReadRegister(4));
+		Thread* waitFor = scheduler->getThreadByTid(tid);
+		currentThread->waitingList->Append((void*)waitFor);
+		currentThread->Sleep();
 		break;
 	}
 	case SC_Create: {

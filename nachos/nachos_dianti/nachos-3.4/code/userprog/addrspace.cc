@@ -44,7 +44,15 @@ SwapHeader(NoffHeader *noffH)
     noffH->uninitData.virtualAddr = WordToHost(noffH->uninitData.virtualAddr);
     noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
-
+AddrSpace::AddrSpace(Thread* toCopy){
+    numPages = toCopy->space->numPages;
+    pageTable = new TranslateEntry[numPages];
+    for(int i = 0; i < numPages; i ++){
+        if(toCopy->space->pageTable[i].codaData == TRUE){
+            memcpy(&pageTable[i], &(toCopy->space->pageTable[i]), sizeof(TranslateEntry));
+        }
+    }
+}
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 // 	Create an address space to run a user program.
@@ -119,6 +127,8 @@ AddrSpace::AddrSpace(OpenFile *executable)
             char* diskPage = allDisk + PageSize * i;
             pageTable[vpn+i].onDisk = true;
             pageTable[vpn+i].diskAddr = diskPage;
+            pageTable[vpn+i].readOnly = TRUE;
+            pageTable[vpn+i].codeData = TRUE;
             machine->disk->Append((void*)diskPage);  //加入虚拟磁
         }
     }
@@ -141,6 +151,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
             if(pageTable[vpn+i].onDisk == FALSE){
                 pageTable[vpn+i].onDisk = true;
                 pageTable[vpn+i].diskAddr = diskPage;
+                pageTable[vpn+i].codeData = TRUE;
                 machine->disk->Append((void*)diskPage);  //加入虚拟磁盘
             }else{    //拷贝到原来已经分配好的磁盘块
                 for(int j = 0; j < PageSize; j ++){

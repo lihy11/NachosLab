@@ -39,7 +39,7 @@
 
 #include "copyright.h"
 #include "utility.h"
-
+#include "list.h"
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
@@ -106,6 +106,7 @@ public:
     void setStatus(ThreadStatus st) { status = st; }
     char *getName() { return (name); }
     void Print() { printf("%s, ", name); }
+    void setPCStatus(void* func){machineState[32/4-1] = func;}
 
 private:
     // some of the private data for this class is listed above
@@ -151,6 +152,7 @@ public:
     int getTicks(){ return ticks;}
     void addTick(){ this->ticks += 1;}
     void clearTicks(){this->ticks = 0;}
+    List* waitingList;
 };
 
 // Magical machine-dependent routines, defined in switch.s

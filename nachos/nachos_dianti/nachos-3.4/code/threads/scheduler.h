@@ -66,6 +66,7 @@ public:
     Thread* runtimeRound();    //时间片轮转
     Thread* multiPriorityQueue();   //多级反馈队列
 
+    Thread* getThreadByTid(int tid);
 };
 
 #endif // SCHEDULER_H

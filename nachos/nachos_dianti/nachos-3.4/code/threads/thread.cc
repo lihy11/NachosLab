@@ -45,6 +45,7 @@ void Thread::init(char *threadName)
     this->stackTop = 0;
     this->stack = 0;
     this->status = JUST_CREATED;
+    this->waitingList = new List();
 
 #ifdef USER_PROGRAM
     space = NULL;
