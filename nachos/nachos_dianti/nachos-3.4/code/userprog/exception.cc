@@ -31,6 +31,7 @@
 extern Machine *machine;
 extern FileSystem* fileSystem;
 extern void StartProcess(char *filename);
+extern void StartForkProcess(int func);
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -88,33 +89,40 @@ void SyscallHandler(int type) {
 	}
 	case SC_Exec: {
 		char* name = (char*) translateAddr(machine->ReadRegister(4));
-		printf("execing prog %s\n", name);
 		Thread* exec = new Thread("thread2");
-		exec->Fork(StartProcess, (void*)name);
+		exec->Fork(StartProcess, (void*) name);
 		machine->WriteRegister(2, exec->getTid());
+		printf("execing prog %s, tid is :%d\n", name, exec->getTid());
 		break;
 	}
 	case SC_Fork: {
-		void* func = (void*) machine->ReadRegister(4);
+		int func = machine->ReadRegister(4);
+
 		Thread* fork = new Thread("fork");
-		fork->StackAllocate((VoidFunctionPtr)func, 0);
-	    AddrSpace* newspace = new AddrSpace(currentThread);
+
+		fork->StackAllocate(StartForkProcess, func);
+
+		AddrSpace* newspace = new AddrSpace(currentThread);
+		newspace->InitRegisters(); // set the initial register values
+		newspace->RestoreState();  // load page table register
 		fork->space = newspace;
-		printf("forking func addr %x\n", (int)func);
+
+		printf("forking func addr %x in thread : %d\n", func, currentThread->getTid());
 		scheduler->ReadyToRun(fork);
 		break;
 	}
 	case SC_Yield: {
-		printf("yield thread %s\n", currentThread->getName());
+		printf("yield thread : %d\n", currentThread->getTid());
 		currentThread->Yield();
 		break;
 	}
 	case SC_Join: {
 		int tid = machine->ReadRegister(4);
 		Thread* waitFor = scheduler->getThreadByTid(tid);
-		currentThread->waitingList->Append((void*)waitFor);
+		currentThread->waitingList->Append((void*) waitFor);
 
-		printf("thread %s join thread %s\n", currentThread->getName(), waitFor->getName());
+		printf("thread %d join thread %d\n", currentThread->getTid(),
+				waitFor->getTid());
 
 		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		currentThread->Sleep();
@@ -160,6 +168,10 @@ void SyscallHandler(int type) {
 		machine->WriteRegister(2, num);
 //		machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
 		break;
+	}
+	default:{
+		printf("wrong syscall type %d\n", type);
+		ASSERT(FALSE);
 	}
 	}
 

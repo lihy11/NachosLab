@@ -7,6 +7,7 @@ void fork(){
 		all ++;
 		Yield();
 	}
+	Exit(0);
 }
 int
 main()
