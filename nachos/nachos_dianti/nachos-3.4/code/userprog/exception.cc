@@ -74,12 +74,12 @@ void SyscallHandler(int type) {
 	case SC_Exit: {
 		printf("thread : %d is exit , Exit code is %d\n",currentThread->getTid(),
 				machine->ReadRegister(4));
-		currentThread->exitCode = machine->ReadRegister(4);
 
 		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		while (!currentThread->waitingList->IsEmpty()) {
 			Thread *t = (Thread *) currentThread->waitingList->Remove();
 			if (t != NULL) {
+				t->exitCode = machine->ReadRegister(4);
 				scheduler->ReadyToRun(t);
 			}
 		}
@@ -118,7 +118,7 @@ void SyscallHandler(int type) {
 	case SC_Join: {
 		int tid = machine->ReadRegister(4);
 		Thread* waitFor = scheduler->getThreadByTid(tid);
-		currentThread->waitingList->Append((void*) waitFor);
+		waitFor->waitingList->Append((void*) currentThread);
 
 		printf("thread %d join thread %d\n", currentThread->getTid(),
 				waitFor->getTid());
@@ -127,7 +127,7 @@ void SyscallHandler(int type) {
 		currentThread->Sleep();
 		interrupt->SetLevel(oldLevel);
 
-		machine->WriteRegister(2, waitFor->exitCode);
+		machine->WriteRegister(2, currentThread->exitCode);
 		break;
 	}
 	case SC_Create: {
