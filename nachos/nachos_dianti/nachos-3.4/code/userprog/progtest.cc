@@ -44,7 +44,10 @@ void StartProcess(char *filename) {
 
 void StartForkProcess(int func) {
 
+	currentThread->space->InitRegisters(); // set the initial register values
+	currentThread->space->RestoreState();  // load page table register
 	currentThread->space->setPC(func);
+
 	machine->Run(); // jump to the user progam
 	ASSERT(FALSE);  // machine->Run never returns;
 

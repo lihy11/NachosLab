@@ -28,6 +28,7 @@
 ///*  for coding */
 #include "machine.h"
 #include "filesys.h"
+
 extern Machine *machine;
 extern FileSystem* fileSystem;
 extern void StartProcess(char *filename);
@@ -71,8 +72,8 @@ void SyscallHandler(int type) {
 		break;
 	}
 	case SC_Exit: {
-		DEBUG('a', "Exit, exit the user prog.\n");
-		printf("Exit code is %d\n", machine->ReadRegister(4));
+		printf("thread : %d is exit , Exit code is %d\n",currentThread->getTid(),
+				machine->ReadRegister(4));
 		currentThread->exitCode = machine->ReadRegister(4);
 
 		IntStatus oldLevel = interrupt->SetLevel(IntOff);
@@ -103,8 +104,6 @@ void SyscallHandler(int type) {
 		fork->StackAllocate(StartForkProcess, func);
 
 		AddrSpace* newspace = new AddrSpace(currentThread);
-		newspace->InitRegisters(); // set the initial register values
-		newspace->RestoreState();  // load page table register
 		fork->space = newspace;
 
 		printf("forking func addr %x in thread : %d\n", func, currentThread->getTid());
