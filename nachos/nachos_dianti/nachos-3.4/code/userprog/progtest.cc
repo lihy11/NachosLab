@@ -110,3 +110,41 @@ void ConsoleTest(char *in, char *out) {
 			return; // if q, quit
 	}
 }
+
+/*
+shell test
+*/
+
+void ShellTest(){
+	OpenFile* pwd = NULL;
+	char* pwdPath = "/home/li";
+	while(true){
+		printf("root@nachos:%s$ ", pwdPath);
+		char op[100] = {};
+		scanf("%s", op);
+		switch(op){
+			case "run":{
+				char prog[20] = {};
+				scanf("%s", prog);
+
+				Thread* thread = new Thread("run thread");
+				thread->waitingList->Append((void*) currentThread);
+				thread->Fork(StartProcess, prog);
+
+				IntStatus oldLevel = interrupt->SetLevel(IntOff);
+				currentThread->Sleep();
+				interrupt->SetLevel(oldLevel);
+
+				printf("exit code is %d\n", currentThread->exitCode);
+				break;
+			}
+			case "ls":
+			case "mkdir":
+			case "touch":
+			case "rm":
+			case "cp":
+			default:
+			printf("Wrong opration\n");
+		}
+	}
+}
