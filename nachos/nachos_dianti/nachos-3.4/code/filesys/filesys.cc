@@ -169,8 +169,6 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
 	fatherFile->filesys = this;
 	Directory *fatherDir = new Directory();
 	fatherDir->FetchFrom(fatherFile);
-	FileHeader *fatherHdr = new FileHeader();
-	fatherHdr->FetchFrom(fatherSec);
 
 	if (fatherDir->Find(name) != -1) {
 		success = FALSE; // file is already in directory
@@ -179,12 +177,12 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
 		if (sector == -1)
 			success = FALSE; // no free block for file header
 		else {
-			fatherDir->Add(getFileName(name), sector, this, isFile, fatherHdr);
+			fatherDir->Add(getFileName(name), sector, this, isFile, fatherFile->hdr);
 			FileHeader *hdr = new FileHeader;
 			hdr->init(this);
 			hdr->WriteBack(sector);
-			fatherHdr->WriteBack(fatherSec);
 			fatherDir->WriteBack(fatherFile);
+			fatherFile->hdr->WriteBack(fatherSec);
 			success = TRUE;
 			delete hdr;
 		}

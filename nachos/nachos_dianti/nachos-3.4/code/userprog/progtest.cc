@@ -148,7 +148,10 @@ void handleOneOp(char* op) {
 
 		fileSystem->Create(filePath, 0, TRUE);
 	} else if (strcmp(op, "rm") == 0) {
+		char filePath[20] = {};
+		scanf("%s", filePath);
 
+		fileSystem->Remove(filePath);
 	} else if (strcmp(op, "cp") == 0) {
 
 	} else {
