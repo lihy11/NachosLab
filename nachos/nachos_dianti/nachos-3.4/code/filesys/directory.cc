@@ -229,10 +229,17 @@ void Directory::List()
 {
     for (int i = 0; i < tableSize; i++){
         if(!table[i].nameOnDisk){
-            printf("%s, %l\n", table[i].name, table[i].createDate);
+            printf("%s  ", table[i].name);
         }else{
-            printf("too long name to show, %l\n", table[i].createDate);
+            printf("too long name to show  ");
         }
+        if(table[i].isDirectory){
+        	printf("d  ");
+        }else{
+        	printf("f  ");
+        }
+        time_t time = (time_t)table[i].createDate;
+        printf("%s\n",ctime(&time));
     }
             
 }

@@ -13,7 +13,7 @@
 #include "console.h"
 #include "addrspace.h"
 #include "synch.h"
-
+#include "directory.h"
 //----------------------------------------------------------------------
 // StartProcess
 // 	Run a user program.  Open the executable, load it into
@@ -31,7 +31,7 @@ void StartProcess(char *filename) {
 	space = new AddrSpace(executable);
 	currentThread->space = space;
 
-	delete executable; // close file
+	fileSystem->Close(executable);
 
 	space->InitRegisters(); // set the initial register values
 	space->RestoreState();  // load page table register
@@ -112,39 +112,57 @@ void ConsoleTest(char *in, char *out) {
 }
 
 /*
-shell test
-*/
+ shell test
+ */
 
-void ShellTest(){
+void handleOneOp(char* op) {
+	if (strcmp(op, "run") == 0) {
+		char prog[20] = { };
+		scanf("%s", prog);
+
+		Thread* thread = new Thread("run thread");
+		thread->waitingList->Append((void*) currentThread);
+		thread->Fork(StartProcess, prog);
+
+		IntStatus oldLevel = interrupt->SetLevel(IntOff);
+		currentThread->Sleep();
+		interrupt->SetLevel(oldLevel);
+
+		printf("exit code is %d\n", currentThread->exitCode);
+	} else if (strcmp(op, "ls") == 0) {
+		char dirPath[20] = {};
+		scanf("%s", dirPath);
+
+		OpenFile* dirFile = fileSystem->Open(dirPath);
+		Directory* dir = new Directory();
+		dir->FetchFrom(dirFile);
+		dir->List();
+	} else if (strcmp(op, "mkdir") == 0) {
+		char dirPath[20] = {};
+		scanf("%s", dirPath);
+
+		fileSystem->Create(dirPath, 0, FALSE);
+	} else if (strcmp(op, "touch") == 0) {
+		char filePath[20] = {};
+		scanf("%s", filePath);
+
+		fileSystem->Create(filePath, 0, TRUE);
+	} else if (strcmp(op, "rm") == 0) {
+
+	} else if (strcmp(op, "cp") == 0) {
+
+	} else {
+		printf("Wrong opration\n");
+	}
+}
+
+void testShell() {
 	OpenFile* pwd = NULL;
 	char* pwdPath = "/home/li";
-	while(true){
+	while (true) {
 		printf("root@nachos:%s$ ", pwdPath);
-		char op[100] = {};
+		char op[100] = { };
 		scanf("%s", op);
-		switch(op){
-			case "run":{
-				char prog[20] = {};
-				scanf("%s", prog);
-
-				Thread* thread = new Thread("run thread");
-				thread->waitingList->Append((void*) currentThread);
-				thread->Fork(StartProcess, prog);
-
-				IntStatus oldLevel = interrupt->SetLevel(IntOff);
-				currentThread->Sleep();
-				interrupt->SetLevel(oldLevel);
-
-				printf("exit code is %d\n", currentThread->exitCode);
-				break;
-			}
-			case "ls":
-			case "mkdir":
-			case "touch":
-			case "rm":
-			case "cp":
-			default:
-			printf("Wrong opration\n");
-		}
+		handleOneOp(op);
 	}
 }

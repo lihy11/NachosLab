@@ -66,6 +66,7 @@ extern void MailTest(int networkID);
 extern void printHello();
 extern void testProg();
 extern void testFileSystem();
+extern void testShell();
 //----------------------------------------------------------------------
 // main
 // 	Bootstrap the operating system kernel.
@@ -94,8 +95,9 @@ int main(int argc, char **argv) {
 //
 	testFileSystem();
 
-	testProg();
+//	testProg();
 
+	testShell();
 	currentThread->Finish(); //
 	return (0);				 // Not reached...
 }

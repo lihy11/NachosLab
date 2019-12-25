@@ -166,6 +166,7 @@ bool FileSystem::Create(char *name, int initialSize, bool isFile) {
 
 	int fatherSec = findFatherDirectory(name, RootDirectorySector);
 	OpenFile *fatherFile = new OpenFile(fatherSec);
+	fatherFile->filesys = this;
 	Directory *fatherDir = new Directory();
 	fatherDir->FetchFrom(fatherFile);
 	FileHeader *fatherHdr = new FileHeader();

@@ -20,7 +20,7 @@
 #include "thread.h"
 #include "disk.h"
 #include "stats.h"
-
+#include "directory.h"
 #define TransferSize 64 // make it small, just to be difficult
 
 //----------------------------------------------------------------------
@@ -218,8 +218,10 @@ void testFileSystem() {
    fileSystem->Create("/home/li", 0, FALSE);
    char* name1 = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/thread1";
    char* name2 = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/thread2";
+   char* name3 = "/home/lihaiyang/NachosLab/nachos/nachos_dianti/nachos-3.4/code/test/sort";
    Copy(name1, "/home/li/thread1");
    Copy(name2, "/home/li/thread2");
+   Copy(name3, "/home/li/sort");
 //   Thread* t1 = new Thread("thread1");
 //   t1->Fork(testSynchRead, 0);
 ////   Thread* t2 = new Thread("thread2");

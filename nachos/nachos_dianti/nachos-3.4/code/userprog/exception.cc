@@ -72,8 +72,8 @@ void SyscallHandler(int type) {
 		break;
 	}
 	case SC_Exit: {
-		printf("thread : %d is exit , Exit code is %d\n",currentThread->getTid(),
-				machine->ReadRegister(4));
+//		printf("thread : %d is exit , Exit code is %d\n",currentThread->getTid(),
+//				machine->ReadRegister(4));
 
 		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		while (!currentThread->waitingList->IsEmpty()) {
@@ -93,7 +93,7 @@ void SyscallHandler(int type) {
 		Thread* exec = new Thread("thread2");
 		exec->Fork(StartProcess, (void*) name);
 		machine->WriteRegister(2, exec->getTid());
-		printf("execing prog %s, tid is :%d\n", name, exec->getTid());
+//		printf("execing prog %s, tid is :%d\n", name, exec->getTid());
 		break;
 	}
 	case SC_Fork: {
@@ -106,12 +106,12 @@ void SyscallHandler(int type) {
 		AddrSpace* newspace = new AddrSpace(currentThread);
 		fork->space = newspace;
 
-		printf("forking func addr %x in thread : %d\n", func, currentThread->getTid());
+//		printf("forking func addr %x in thread : %d\n", func, currentThread->getTid());
 		scheduler->ReadyToRun(fork);
 		break;
 	}
 	case SC_Yield: {
-		printf("yield thread : %d\n", currentThread->getTid());
+//		printf("yield thread : %d\n", currentThread->getTid());
 		currentThread->Yield();
 		break;
 	}
@@ -120,8 +120,8 @@ void SyscallHandler(int type) {
 		Thread* waitFor = scheduler->getThreadByTid(tid);
 		waitFor->waitingList->Append((void*) currentThread);
 
-		printf("thread %d join thread %d\n", currentThread->getTid(),
-				waitFor->getTid());
+//		printf("thread %d join thread %d\n", currentThread->getTid(),
+//				waitFor->getTid());
 
 		IntStatus oldLevel = interrupt->SetLevel(IntOff);
 		currentThread->Sleep();
