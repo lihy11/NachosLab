@@ -152,8 +152,17 @@ void handleOneOp(char* op) {
 		scanf("%s", filePath);
 
 		fileSystem->Remove(filePath);
-	} else if (strcmp(op, "cp") == 0) {
-
+	} else if(strcmp(op, "exit") == 0){
+		interrupt->Halt();
+	} else if (strcmp(op, "help") == 0) {
+		printf("supported operation:\n");
+		printf("1. run prog, run the program in file system\n");
+		printf("2. ls dir, list the context of the $dir\n");
+		printf("3. mkdir dir, create a dir named $dir\n");
+		printf("4. rm file, remove the file or dir named $file\n");
+		printf("5. touch file, create a file named $file\n");
+		printf("6. exit, exit nachos\n");
+		printf("notice : all the path should be absoule path\n");
 	} else {
 		printf("Wrong opration\n");
 	}
